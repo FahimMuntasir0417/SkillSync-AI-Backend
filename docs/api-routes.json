@@ -1,0 +1,79 @@
+{
+  "name": "SkillSync AI API Routes",
+  "baseUrl": "http://localhost:5000",
+  "productionBaseUrl": "https://skill-sync-ai-backend.vercel.app",
+  "modules": [
+    {
+      "module": "Health",
+      "baseUrl": "",
+      "endpoints": [
+        {
+          "name": "Health Check",
+          "method": "GET",
+          "url": "/health",
+          "notes": "Public route. Confirms the API is running."
+        }
+      ]
+    },
+    {
+      "module": "Auth",
+      "docs": "docs/auth-routes.json",
+      "baseUrl": "/api/v1/auth",
+      "endpoints": [
+        "POST /api/v1/auth/register",
+        "POST /api/v1/auth/login",
+        "POST /api/v1/auth/refresh-token",
+        "POST /api/v1/auth/logout",
+        "POST /api/v1/auth/change-password",
+        "POST /api/v1/auth/verify-email",
+        "POST /api/v1/auth/forget-password",
+        "POST /api/v1/auth/reset-password",
+        "GET /api/v1/auth/me",
+        "GET /api/v1/auth/users/me",
+        "GET /api/v1/auth/google",
+        "GET /api/v1/auth/login/google",
+        "GET /api/v1/auth/google/callback",
+        "GET /api/v1/auth/google/success",
+        "GET /api/v1/auth/oauth/error"
+      ]
+    },
+    {
+      "module": "Users",
+      "docs": "docs/user-routes.json",
+      "baseUrl": "/api/v1/users",
+      "endpoints": [
+        "GET /api/v1/users",
+        "GET /api/v1/users/me",
+        "PATCH /api/v1/users/me",
+        "PATCH /api/v1/users/:id/role",
+        "PATCH /api/v1/users/:id/block"
+      ]
+    },
+    {
+      "module": "Categories",
+      "docs": "docs/category-routes.json",
+      "baseUrl": "/api/v1/categories",
+      "endpoints": [
+        "POST /api/v1/categories",
+        "GET /api/v1/categories",
+        "GET /api/v1/categories/:id",
+        "PATCH /api/v1/categories/:id",
+        "DELETE /api/v1/categories/:id"
+      ]
+    },
+    {
+      "module": "Courses",
+      "docs": "docs/course-routes.json",
+      "baseUrl": "/api/v1/courses",
+      "endpoints": [
+        "POST /api/v1/courses",
+        "GET /api/v1/courses",
+        "GET /api/v1/courses/featured",
+        "GET /api/v1/courses/related/:courseId",
+        "GET /api/v1/courses/:slug",
+        "PATCH /api/v1/courses/:id",
+        "DELETE /api/v1/courses/:id"
+      ]
+    }
+  ]
+}

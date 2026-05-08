@@ -1,0 +1,266 @@
+{
+  "module": "Courses",
+  "baseUrl": "/api/v1/courses",
+  "endpoints": [
+    {
+      "name": "Create Course",
+      "method": "POST",
+      "url": "/api/v1/courses",
+      "body": {
+        "title": "Complete Backend Development with Node.js",
+        "shortDescription": "Learn to build scalable backend APIs with Express, Prisma, and PostgreSQL.",
+        "description": "This course teaches API design, authentication, database modeling, validation, and deployment.",
+        "thumbnail": "https://example.com/backend-course.png",
+        "previewVideoUrl": "https://example.com/preview.mp4",
+        "price": 49,
+        "level": "INTERMEDIATE",
+        "status": "PUBLISHED",
+        "durationInHours": 18,
+        "categoryId": "category-uuid"
+      },
+      "notes": "Admin or instructor only. Requires Authorization: Bearer <accessToken>. Instructor ID comes from the logged-in user. Admin can optionally provide instructorId."
+    },
+    {
+      "name": "Get Courses",
+      "method": "GET",
+      "url": "/api/v1/courses",
+      "query": {
+        "search": "backend",
+        "categoryId": "category-uuid",
+        "level": "INTERMEDIATE",
+        "status": "PUBLISHED",
+        "minPrice": 10,
+        "maxPrice": 100,
+        "minRating": 4,
+        "instructorId": "user-uuid",
+        "page": 1,
+        "limit": 10,
+        "sortBy": "createdAt",
+        "sortOrder": "desc"
+      },
+      "notes": "Public route. Returns published courses only by default. Search works on title, shortDescription, and description."
+    },
+    {
+      "name": "Get Featured Courses",
+      "method": "GET",
+      "url": "/api/v1/courses/featured",
+      "query": {
+        "limit": 8
+      },
+      "notes": "Public route. Published courses only. Sorted by averageRating, totalEnrollments, and createdAt."
+    },
+    {
+      "name": "Get Related Courses",
+      "method": "GET",
+      "url": "/api/v1/courses/related/:courseId",
+      "params": {
+        "courseId": "course-uuid"
+      },
+      "query": {
+        "limit": 4
+      },
+      "notes": "Public route. Returns published courses from the same category and excludes the current course."
+    },
+    {
+      "name": "Get Course By Slug",
+      "method": "GET",
+      "url": "/api/v1/courses/:slug",
+      "params": {
+        "slug": "complete-backend-development-with-node-js"
+      },
+      "notes": "Public route. Returns published course details with category, instructor, modules, lessons, reviews, and enrollment count."
+    },
+    {
+      "name": "Update Course",
+      "method": "PATCH",
+      "url": "/api/v1/courses/:id",
+      "params": {
+        "id": "course-uuid"
+      },
+      "body": {
+        "title": "Advanced Backend Development with Node.js",
+        "shortDescription": "Build production backend APIs with Express, Prisma, PostgreSQL, and deployment workflows.",
+        "description": "Updated course description with more advanced backend engineering topics.",
+        "thumbnail": "https://example.com/advanced-backend-course.png",
+        "previewVideoUrl": "https://example.com/advanced-preview.mp4",
+        "price": 79,
+        "level": "ADVANCED",
+        "status": "PUBLISHED",
+        "durationInHours": 24,
+        "categoryId": "category-uuid"
+      },
+      "notes": "Admin or owner instructor only. Requires Authorization: Bearer <accessToken>. If title changes, slug is regenerated."
+    },
+    {
+      "name": "Delete Course",
+      "method": "DELETE",
+      "url": "/api/v1/courses/:id",
+      "params": {
+        "id": "course-uuid"
+      },
+      "notes": "Admin or owner instructor only. Requires Authorization: Bearer <accessToken>."
+    }
+  ],
+  "responses": {
+    "createSuccess": {
+      "success": true,
+      "message": "Course created successfully",
+      "data": {
+        "id": "course-uuid",
+        "title": "Complete Backend Development with Node.js",
+        "slug": "complete-backend-development-with-node-js",
+        "shortDescription": "Learn to build scalable backend APIs with Express, Prisma, and PostgreSQL.",
+        "description": "This course teaches API design, authentication, database modeling, validation, and deployment.",
+        "thumbnail": "https://example.com/backend-course.png",
+        "previewVideoUrl": "https://example.com/preview.mp4",
+        "price": 49,
+        "level": "INTERMEDIATE",
+        "status": "PUBLISHED",
+        "durationInHours": 18,
+        "totalLessons": 0,
+        "averageRating": 0,
+        "totalReviews": 0,
+        "totalEnrollments": 0,
+        "categoryId": "category-uuid",
+        "instructorId": "user-uuid",
+        "category": {
+          "id": "category-uuid",
+          "name": "Backend Development",
+          "slug": "backend-development",
+          "iconUrl": "https://example.com/backend.png"
+        },
+        "instructor": {
+          "id": "user-uuid",
+          "name": "SkillSync Instructor",
+          "email": "instructor@example.com",
+          "avatarUrl": "https://example.com/avatar.png",
+          "image": null,
+          "bio": "Backend instructor",
+          "role": "INSTRUCTOR"
+        },
+        "createdAt": "2026-05-08T00:00:00.000Z",
+        "updatedAt": "2026-05-08T00:00:00.000Z",
+        "enrollmentCount": 0
+      }
+    },
+    "listSuccess": {
+      "success": true,
+      "message": "Courses retrieved successfully",
+      "meta": {
+        "page": 1,
+        "limit": 10,
+        "total": 1,
+        "totalPage": 1
+      },
+      "data": [
+        {
+          "id": "course-uuid",
+          "title": "Complete Backend Development with Node.js",
+          "slug": "complete-backend-development-with-node-js",
+          "price": 49,
+          "level": "INTERMEDIATE",
+          "status": "PUBLISHED",
+          "averageRating": 0,
+          "totalEnrollments": 0,
+          "category": {
+            "id": "category-uuid",
+            "name": "Backend Development",
+            "slug": "backend-development",
+            "iconUrl": "https://example.com/backend.png"
+          },
+          "instructor": {
+            "id": "user-uuid",
+            "name": "SkillSync Instructor",
+            "email": "instructor@example.com",
+            "avatarUrl": "https://example.com/avatar.png",
+            "image": null,
+            "bio": "Backend instructor",
+            "role": "INSTRUCTOR"
+          },
+          "enrollmentCount": 0
+        }
+      ]
+    },
+    "detailsSuccess": {
+      "success": true,
+      "message": "Course retrieved successfully",
+      "data": {
+        "id": "course-uuid",
+        "title": "Complete Backend Development with Node.js",
+        "slug": "complete-backend-development-with-node-js",
+        "price": 49,
+        "level": "INTERMEDIATE",
+        "status": "PUBLISHED",
+        "category": {
+          "id": "category-uuid",
+          "name": "Backend Development",
+          "slug": "backend-development",
+          "iconUrl": "https://example.com/backend.png"
+        },
+        "instructor": {
+          "id": "user-uuid",
+          "name": "SkillSync Instructor",
+          "email": "instructor@example.com",
+          "avatarUrl": "https://example.com/avatar.png",
+          "image": null,
+          "bio": "Backend instructor",
+          "role": "INSTRUCTOR"
+        },
+        "modules": [
+          {
+            "id": "module-uuid",
+            "title": "API Foundations",
+            "description": "Core API design lessons",
+            "order": 1,
+            "lessons": [
+              {
+                "id": "lesson-uuid",
+                "title": "REST API Basics",
+                "content": "Lesson content",
+                "videoUrl": "https://example.com/lesson.mp4",
+                "resourceUrl": "https://example.com/resource.pdf",
+                "order": 1,
+                "isPreview": true
+              }
+            ]
+          }
+        ],
+        "reviews": [
+          {
+            "id": "review-uuid",
+            "rating": 5,
+            "comment": "Excellent course",
+            "user": {
+              "id": "user-uuid",
+              "name": "SkillSync Student",
+              "email": "student@example.com",
+              "avatarUrl": "https://example.com/student.png",
+              "image": null,
+              "bio": "Student",
+              "role": "STUDENT"
+            }
+          }
+        ],
+        "enrollmentCount": 12
+      }
+    },
+    "notFoundError": {
+      "success": false,
+      "message": "Course not found",
+      "errors": [
+        {
+          "message": "Course not found"
+        }
+      ]
+    },
+    "forbiddenError": {
+      "success": false,
+      "message": "You are not authorized",
+      "errors": [
+        {
+          "message": "You are not authorized"
+        }
+      ]
+    }
+  }
+}
