@@ -1,0 +1,164 @@
+{
+  "module": "Lessons",
+  "baseUrl": "/api/v1/lessons",
+  "endpoints": [
+    {
+      "name": "Create Lesson",
+      "method": "POST",
+      "url": "/api/v1/lessons",
+      "body": {
+        "title": "Understanding JWT Access Tokens",
+        "content": "In this lesson, students learn how access tokens work...",
+        "videoUrl": "https://example.com/video.mp4",
+        "resourceUrl": "https://example.com/resource.pdf",
+        "order": 1,
+        "isPreview": false,
+        "moduleId": "module-uuid"
+      },
+      "notes": "Admin or owner instructor only. Requires Authorization: Bearer <accessToken>. Order must be unique per module."
+    },
+    {
+      "name": "Update Lesson",
+      "method": "PATCH",
+      "url": "/api/v1/lessons/:id",
+      "params": {
+        "id": "lesson-uuid"
+      },
+      "body": {
+        "title": "Understanding JWT Access Tokens Deeply",
+        "content": "Updated lesson content about access tokens, token payloads, and expiration.",
+        "videoUrl": "https://example.com/updated-video.mp4",
+        "resourceUrl": "https://example.com/updated-resource.pdf",
+        "order": 2,
+        "isPreview": true,
+        "moduleId": "module-uuid"
+      },
+      "notes": "Admin or owner instructor only. Requires Authorization: Bearer <accessToken>. If moduleId or order changes, the new order must be unique for the target module."
+    },
+    {
+      "name": "Delete Lesson",
+      "method": "DELETE",
+      "url": "/api/v1/lessons/:id",
+      "params": {
+        "id": "lesson-uuid"
+      },
+      "notes": "Admin or owner instructor only. Requires Authorization: Bearer <accessToken>. Course totalLessons is recalculated after delete."
+    },
+    {
+      "name": "Complete Lesson",
+      "method": "PATCH",
+      "url": "/api/v1/lessons/:id/complete",
+      "params": {
+        "id": "lesson-uuid"
+      },
+      "notes": "Student only. Requires Authorization: Bearer <accessToken>. Student must be enrolled in the course. Creates or updates LessonProgress and recalculates Enrollment.progress."
+    }
+  ],
+  "responses": {
+    "createSuccess": {
+      "success": true,
+      "message": "Lesson created successfully",
+      "data": {
+        "id": "lesson-uuid",
+        "title": "Understanding JWT Access Tokens",
+        "content": "In this lesson, students learn how access tokens work...",
+        "videoUrl": "https://example.com/video.mp4",
+        "resourceUrl": "https://example.com/resource.pdf",
+        "order": 1,
+        "isPreview": false,
+        "moduleId": "module-uuid",
+        "createdAt": "2026-05-08T00:00:00.000Z",
+        "updatedAt": "2026-05-08T00:00:00.000Z",
+        "module": {
+          "id": "module-uuid",
+          "title": "Authentication and Authorization",
+          "order": 1,
+          "courseId": "course-uuid",
+          "course": {
+            "id": "course-uuid",
+            "title": "Complete Backend Development with Node.js",
+            "slug": "complete-backend-development-with-node-js",
+            "instructorId": "user-uuid"
+          }
+        }
+      }
+    },
+    "updateSuccess": {
+      "success": true,
+      "message": "Lesson updated successfully",
+      "data": {
+        "id": "lesson-uuid",
+        "title": "Understanding JWT Access Tokens Deeply",
+        "content": "Updated lesson content about access tokens, token payloads, and expiration.",
+        "videoUrl": "https://example.com/updated-video.mp4",
+        "resourceUrl": "https://example.com/updated-resource.pdf",
+        "order": 2,
+        "isPreview": true,
+        "moduleId": "module-uuid",
+        "createdAt": "2026-05-08T00:00:00.000Z",
+        "updatedAt": "2026-05-08T00:00:00.000Z",
+        "module": {
+          "id": "module-uuid",
+          "title": "Authentication and Authorization",
+          "order": 1,
+          "courseId": "course-uuid",
+          "course": {
+            "id": "course-uuid",
+            "title": "Complete Backend Development with Node.js",
+            "slug": "complete-backend-development-with-node-js",
+            "instructorId": "user-uuid"
+          }
+        }
+      }
+    },
+    "deleteSuccess": {
+      "success": true,
+      "message": "Lesson deleted successfully",
+      "data": null
+    },
+    "completeSuccess": {
+      "success": true,
+      "message": "Lesson marked as completed",
+      "data": {
+        "completed": true,
+        "courseProgress": 35
+      }
+    },
+    "duplicateOrderError": {
+      "success": false,
+      "message": "Lesson order already exists for this module",
+      "errors": [
+        {
+          "message": "Lesson order already exists for this module"
+        }
+      ]
+    },
+    "notEnrolledError": {
+      "success": false,
+      "message": "You must be enrolled in this course to complete lessons",
+      "errors": [
+        {
+          "message": "You must be enrolled in this course to complete lessons"
+        }
+      ]
+    },
+    "notFoundError": {
+      "success": false,
+      "message": "Lesson not found",
+      "errors": [
+        {
+          "message": "Lesson not found"
+        }
+      ]
+    },
+    "forbiddenError": {
+      "success": false,
+      "message": "You are not authorized",
+      "errors": [
+        {
+          "message": "You are not authorized"
+        }
+      ]
+    }
+  }
+}

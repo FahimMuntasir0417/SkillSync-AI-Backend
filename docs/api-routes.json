@@ -84,6 +84,17 @@
         "PATCH /api/v1/course-modules/:id",
         "DELETE /api/v1/course-modules/:id"
       ]
+    },
+    {
+      "module": "Lessons",
+      "docs": "docs/lesson-routes.json",
+      "baseUrl": "/api/v1/lessons",
+      "endpoints": [
+        "POST /api/v1/lessons",
+        "PATCH /api/v1/lessons/:id",
+        "DELETE /api/v1/lessons/:id",
+        "PATCH /api/v1/lessons/:id/complete"
+      ]
     }
   ]
 }
