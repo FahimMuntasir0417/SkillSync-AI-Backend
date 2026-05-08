@@ -1,0 +1,37 @@
+{
+  "module": "Submission Reviews",
+  "baseUrl": "/api/v1",
+  "endpoints": [
+    {
+      "name": "Create Submission Review",
+      "method": "POST",
+      "url": "/api/v1/submissions/:id/review",
+      "params": { "id": "submission-uuid" },
+      "body": {
+        "feedback": "Good folder structure and clean API design. Add more tests and improve README.",
+        "score": 85,
+        "submissionStatus": "APPROVED"
+      },
+      "notes": "Admin or owner instructor only. Creates one review per submission and updates submission status."
+    },
+    {
+      "name": "Update Submission Review",
+      "method": "PATCH",
+      "url": "/api/v1/reviews/:id",
+      "params": { "id": "review-uuid" },
+      "body": {
+        "feedback": "Improved work. Add integration tests next.",
+        "score": 90,
+        "submissionStatus": "APPROVED"
+      },
+      "notes": "Admin or owner instructor only."
+    },
+    {
+      "name": "Get Submission Review",
+      "method": "GET",
+      "url": "/api/v1/reviews/:id",
+      "params": { "id": "review-uuid" },
+      "notes": "Related student, owner instructor, or admin only."
+    }
+  ]
+}

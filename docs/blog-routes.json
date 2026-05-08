@@ -1,0 +1,58 @@
+{
+  "module": "Blogs",
+  "baseUrl": "/api/v1/blogs",
+  "endpoints": [
+    {
+      "name": "Create Blog",
+      "method": "POST",
+      "url": "/api/v1/blogs",
+      "body": {
+        "title": "How to Learn Backend Development in 2026",
+        "excerpt": "A practical roadmap for learning backend engineering with Node.js and PostgreSQL.",
+        "content": "Backend development is about designing reliable APIs, databases, and systems...",
+        "thumbnail": "https://example.com/blog.png",
+        "tags": ["backend", "nodejs", "postgresql"],
+        "published": true
+      },
+      "notes": "Admin or instructor only. Slug is auto-generated."
+    },
+    {
+      "name": "Get Blogs",
+      "method": "GET",
+      "url": "/api/v1/blogs",
+      "query": {
+        "search": "backend",
+        "tag": "nodejs",
+        "published": true,
+        "authorId": "user-uuid",
+        "page": 1,
+        "limit": 10,
+        "sortBy": "createdAt",
+        "sortOrder": "desc"
+      },
+      "notes": "Public users see published blogs."
+    },
+    {
+      "name": "Get Blog By Slug",
+      "method": "GET",
+      "url": "/api/v1/blogs/:slug",
+      "params": { "slug": "how-to-learn-backend-development-in-2026" },
+      "notes": "Public route for published blogs."
+    },
+    {
+      "name": "Update Blog",
+      "method": "PATCH",
+      "url": "/api/v1/blogs/:id",
+      "params": { "id": "blog-uuid" },
+      "body": { "published": false },
+      "notes": "Admin or blog author only."
+    },
+    {
+      "name": "Delete Blog",
+      "method": "DELETE",
+      "url": "/api/v1/blogs/:id",
+      "params": { "id": "blog-uuid" },
+      "notes": "Admin or blog author only."
+    }
+  ]
+}

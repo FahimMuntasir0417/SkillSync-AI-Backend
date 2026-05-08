@@ -130,6 +130,51 @@
         "GET /api/v1/submissions/:id",
         "PATCH /api/v1/submissions/:id/status"
       ]
+    },
+    {
+      "module": "Submission Reviews",
+      "docs": "docs/review-routes.json",
+      "baseUrl": "/api/v1",
+      "endpoints": [
+        "POST /api/v1/submissions/:id/review",
+        "PATCH /api/v1/reviews/:id",
+        "GET /api/v1/reviews/:id"
+      ]
+    },
+    {
+      "module": "Course Reviews",
+      "docs": "docs/course-review-routes.json",
+      "baseUrl": "/api/v1",
+      "endpoints": [
+        "POST /api/v1/courses/:courseId/reviews",
+        "GET /api/v1/courses/:courseId/reviews",
+        "PATCH /api/v1/course-reviews/:id",
+        "DELETE /api/v1/course-reviews/:id"
+      ]
+    },
+    {
+      "module": "Blogs",
+      "docs": "docs/blog-routes.json",
+      "baseUrl": "/api/v1/blogs",
+      "endpoints": [
+        "POST /api/v1/blogs",
+        "GET /api/v1/blogs",
+        "GET /api/v1/blogs/:slug",
+        "PATCH /api/v1/blogs/:id",
+        "DELETE /api/v1/blogs/:id"
+      ]
+    },
+    {
+      "module": "Support",
+      "docs": "docs/support-routes.json",
+      "baseUrl": "/api/v1/support",
+      "endpoints": [
+        "POST /api/v1/support/tickets",
+        "GET /api/v1/support/tickets",
+        "GET /api/v1/support/tickets/:id",
+        "PATCH /api/v1/support/tickets/:id/status",
+        "POST /api/v1/support/tickets/:id/replies"
+      ]
     }
   ]
 }

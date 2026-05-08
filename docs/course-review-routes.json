@@ -1,0 +1,42 @@
+{
+  "module": "Course Reviews",
+  "baseUrl": "/api/v1",
+  "endpoints": [
+    {
+      "name": "Create Course Review",
+      "method": "POST",
+      "url": "/api/v1/courses/:courseId/reviews",
+      "params": { "courseId": "course-uuid" },
+      "body": {
+        "rating": 5,
+        "comment": "Excellent course for understanding backend architecture."
+      },
+      "notes": "Enrolled student only. One review per user per course. Recalculates course rating."
+    },
+    {
+      "name": "Get Course Reviews",
+      "method": "GET",
+      "url": "/api/v1/courses/:courseId/reviews",
+      "params": { "courseId": "course-uuid" },
+      "notes": "Public route."
+    },
+    {
+      "name": "Update Course Review",
+      "method": "PATCH",
+      "url": "/api/v1/course-reviews/:id",
+      "params": { "id": "course-review-uuid" },
+      "body": {
+        "rating": 4,
+        "comment": "Great course with helpful projects."
+      },
+      "notes": "Review owner only. Recalculates course rating."
+    },
+    {
+      "name": "Delete Course Review",
+      "method": "DELETE",
+      "url": "/api/v1/course-reviews/:id",
+      "params": { "id": "course-review-uuid" },
+      "notes": "Review owner or admin. Recalculates course rating."
+    }
+  ]
+}

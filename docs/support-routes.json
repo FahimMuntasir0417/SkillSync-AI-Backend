@@ -1,0 +1,54 @@
+{
+  "module": "Support",
+  "baseUrl": "/api/v1/support",
+  "endpoints": [
+    {
+      "name": "Create Ticket",
+      "method": "POST",
+      "url": "/api/v1/support/tickets",
+      "body": {
+        "subject": "I cannot access my course",
+        "message": "I enrolled in the backend course, but it is not showing in My Classes.",
+        "priority": "HIGH"
+      },
+      "notes": "Authenticated users only."
+    },
+    {
+      "name": "Get Tickets",
+      "method": "GET",
+      "url": "/api/v1/support/tickets",
+      "query": {
+        "status": "OPEN",
+        "priority": "HIGH",
+        "page": 1,
+        "limit": 10,
+        "sortBy": "createdAt",
+        "sortOrder": "desc"
+      },
+      "notes": "Users see own tickets. Admin sees all."
+    },
+    {
+      "name": "Get Ticket By ID",
+      "method": "GET",
+      "url": "/api/v1/support/tickets/:id",
+      "params": { "id": "ticket-uuid" },
+      "notes": "Ticket owner or admin only."
+    },
+    {
+      "name": "Update Ticket Status",
+      "method": "PATCH",
+      "url": "/api/v1/support/tickets/:id/status",
+      "params": { "id": "ticket-uuid" },
+      "body": { "status": "RESOLVED" },
+      "notes": "Admin only."
+    },
+    {
+      "name": "Reply To Ticket",
+      "method": "POST",
+      "url": "/api/v1/support/tickets/:id/replies",
+      "params": { "id": "ticket-uuid" },
+      "body": { "message": "We checked your enrollment and fixed the issue." },
+      "notes": "Ticket owner or admin. Admin reply creates a notification for the ticket owner."
+    }
+  ]
+}
