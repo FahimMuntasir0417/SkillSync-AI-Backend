@@ -1,0 +1,116 @@
+{
+  "module": "Course Modules",
+  "baseUrl": "/api/v1/course-modules",
+  "endpoints": [
+    {
+      "name": "Create Course Module",
+      "method": "POST",
+      "url": "/api/v1/course-modules",
+      "body": {
+        "title": "Authentication and Authorization",
+        "description": "Learn JWT, refresh tokens, and role-based access.",
+        "order": 1,
+        "courseId": "course-uuid"
+      },
+      "notes": "Admin or owner instructor only. Requires Authorization: Bearer <accessToken>. Order must be unique per course."
+    },
+    {
+      "name": "Update Course Module",
+      "method": "PATCH",
+      "url": "/api/v1/course-modules/:id",
+      "params": {
+        "id": "module-uuid"
+      },
+      "body": {
+        "title": "Advanced Authentication and Authorization",
+        "description": "Learn JWT, refresh token rotation, RBAC, and route protection.",
+        "order": 2,
+        "courseId": "course-uuid"
+      },
+      "notes": "Admin or owner instructor only. Requires Authorization: Bearer <accessToken>. If courseId or order changes, the new order must be unique for the target course."
+    },
+    {
+      "name": "Delete Course Module",
+      "method": "DELETE",
+      "url": "/api/v1/course-modules/:id",
+      "params": {
+        "id": "module-uuid"
+      },
+      "notes": "Admin or owner instructor only. Requires Authorization: Bearer <accessToken>. Related lessons are deleted by cascade according to the Prisma schema."
+    }
+  ],
+  "responses": {
+    "createSuccess": {
+      "success": true,
+      "message": "Course module created successfully",
+      "data": {
+        "id": "module-uuid",
+        "title": "Authentication and Authorization",
+        "description": "Learn JWT, refresh tokens, and role-based access.",
+        "order": 1,
+        "courseId": "course-uuid",
+        "createdAt": "2026-05-08T00:00:00.000Z",
+        "updatedAt": "2026-05-08T00:00:00.000Z",
+        "course": {
+          "id": "course-uuid",
+          "title": "Complete Backend Development with Node.js",
+          "slug": "complete-backend-development-with-node-js",
+          "instructorId": "user-uuid"
+        },
+        "lessonCount": 0
+      }
+    },
+    "updateSuccess": {
+      "success": true,
+      "message": "Course module updated successfully",
+      "data": {
+        "id": "module-uuid",
+        "title": "Advanced Authentication and Authorization",
+        "description": "Learn JWT, refresh token rotation, RBAC, and route protection.",
+        "order": 2,
+        "courseId": "course-uuid",
+        "createdAt": "2026-05-08T00:00:00.000Z",
+        "updatedAt": "2026-05-08T00:00:00.000Z",
+        "course": {
+          "id": "course-uuid",
+          "title": "Complete Backend Development with Node.js",
+          "slug": "complete-backend-development-with-node-js",
+          "instructorId": "user-uuid"
+        },
+        "lessonCount": 0
+      }
+    },
+    "deleteSuccess": {
+      "success": true,
+      "message": "Course module deleted successfully",
+      "data": null
+    },
+    "duplicateOrderError": {
+      "success": false,
+      "message": "Module order already exists for this course",
+      "errors": [
+        {
+          "message": "Module order already exists for this course"
+        }
+      ]
+    },
+    "notFoundError": {
+      "success": false,
+      "message": "Course module not found",
+      "errors": [
+        {
+          "message": "Course module not found"
+        }
+      ]
+    },
+    "forbiddenError": {
+      "success": false,
+      "message": "You are not authorized",
+      "errors": [
+        {
+          "message": "You are not authorized"
+        }
+      ]
+    }
+  }
+}
