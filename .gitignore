@@ -12,3 +12,4 @@ yarn-error.log*
 pnpm-debug.log*
 
 .vercel
+docs/.post-route-demo-data.json
