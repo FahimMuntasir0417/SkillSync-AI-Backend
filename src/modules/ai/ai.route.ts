@@ -10,19 +10,53 @@ import {
   aiLogQuerySchema,
   assignmentFeedbackSchema,
   blogGeneratorSchema,
-  careerChatSchema,
+  chatValidation,
   chatSchema,
   courseSummarySchema,
-  projectRecommenderSchema,
+  generateRoadmapValidation,
+  recommendProjectsValidation,
   recommendationsSchema,
   roadmapGeneratorSchema,
+  projectRecommenderSchema,
+  careerChatSchema,
+  analyzeSkillGapValidation,
   skillGapAnalyzerSchema,
 } from "./ai.validation.js";
 
 export const aiRoute = Router();
+const router = aiRoute;
+
+router.post(
+  "/roadmap",
+  aiRateLimiter,
+  checkAuth(),
+  validateRequest(generateRoadmapValidation),
+  aiController.generateRoadmapController,
+);
+router.post(
+  "/skill-gap",
+  aiRateLimiter,
+  checkAuth(),
+  validateRequest(analyzeSkillGapValidation),
+  aiController.analyzeSkillGapController,
+);
+router.post(
+  "/project-recommendations",
+  aiRateLimiter,
+  checkAuth(),
+  validateRequest(recommendProjectsValidation),
+  aiController.recommendProjectsController,
+);
+router.post(
+  "/chat",
+  aiRateLimiter,
+  checkAuth(),
+  validateRequest(chatValidation),
+  aiController.chatController,
+);
 
 aiRoute.post("/course-summary", aiRateLimiter, checkAuth(), validateRequest(courseSummarySchema), aiController.courseSummary);
-aiRoute.post("/chat", aiRateLimiter, checkAuth(), validateRequest(chatSchema), aiController.chat);
+aiRoute.post("/study-chat", aiRateLimiter, checkAuth(), validateRequest(chatSchema), aiController.chat);
 aiRoute.post("/recommendations", aiRateLimiter, checkAuth(), validateRequest(recommendationsSchema), aiController.recommendations);
 aiRoute.post("/assignment-feedback", aiRateLimiter, checkAuth(), validateRequest(assignmentFeedbackSchema), aiController.assignmentFeedback);
 aiRoute.post("/blog-generator", aiRateLimiter, checkAuth(), validateRequest(blogGeneratorSchema), aiController.blogGenerator);
@@ -31,3 +65,5 @@ aiRoute.post("/skill-gap-analyzer", aiRateLimiter, checkAuth(), validateRequest(
 aiRoute.post("/project-recommender", aiRateLimiter, checkAuth(), validateRequest(projectRecommenderSchema), aiController.projectRecommender);
 aiRoute.post("/career-chat", aiRateLimiter, checkAuth(), validateRequest(careerChatSchema), aiController.careerChat);
 aiRoute.get("/logs", checkAuth(), roleGuard(UserRole.ADMIN), validateRequest(aiLogQuerySchema), aiController.getAiLogs);
+
+export const AiRoutes = router;

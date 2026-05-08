@@ -3,6 +3,14 @@ import httpStatus from "http-status";
 import { catchAsync } from "../../common/utils/catchAsync.js";
 import { sendResponse } from "../../common/utils/sendResponse.js";
 import { aiService } from "./ai.service.js";
+import {
+  analyzeSkillGapWithGemini,
+  generateRoadmapWithGemini,
+} from "./gemini.service.js";
+import {
+  chatWithOpenAI,
+  recommendProjectsWithOpenAI,
+} from "./openai.service.js";
 
 const courseSummary = catchAsync(async (req, res) => {
   const data = await aiService.generateCourseSummary(req.body, req.user.userId);
@@ -45,6 +53,54 @@ const getAiLogs = catchAsync(async (req, res) => {
   sendResponse(res, { statusCode: httpStatus.OK, message: "AI logs retrieved successfully", meta: result.meta, data: result.data });
 });
 
+const generateRoadmapController = catchAsync(async (req, res) => {
+  const result = await generateRoadmapWithGemini(req.body);
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "AI roadmap generated successfully",
+    provider: "gemini",
+    feature: "AI Roadmap Generator",
+    data: result,
+  });
+});
+
+const analyzeSkillGapController = catchAsync(async (req, res) => {
+  const result = await analyzeSkillGapWithGemini(req.body);
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Skill gap analyzed successfully",
+    provider: "gemini",
+    feature: "AI Skill Gap Analyzer",
+    data: result,
+  });
+});
+
+const recommendProjectsController = catchAsync(async (req, res) => {
+  const result = await recommendProjectsWithOpenAI(req.body);
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "Project recommendations generated successfully",
+    provider: "openai",
+    feature: "AI Project Recommender",
+    data: result,
+  });
+});
+
+const chatController = catchAsync(async (req, res) => {
+  const result = await chatWithOpenAI(req.body);
+
+  res.status(httpStatus.OK).json({
+    success: true,
+    message: "AI chat response generated successfully",
+    provider: "openai",
+    feature: "AI Chat Assistant",
+    data: result,
+  });
+});
+
 export const aiController = {
   courseSummary,
   chat,
@@ -56,4 +112,8 @@ export const aiController = {
   projectRecommender,
   careerChat,
   getAiLogs,
+  generateRoadmapController,
+  analyzeSkillGapController,
+  recommendProjectsController,
+  chatController,
 };

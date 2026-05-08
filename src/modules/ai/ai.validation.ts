@@ -1,6 +1,8 @@
 import { AiFeatureType, AiRequestStatus } from "@prisma/client";
 import { z } from "zod";
 
+const userLevelEnum = z.enum(["beginner", "intermediate", "advanced"]);
+
 export const courseSummarySchema = { body: z.object({ courseId: z.uuid() }) };
 
 export const chatSchema = {
@@ -36,40 +38,47 @@ export const blogGeneratorSchema = {
   }),
 };
 
-export const roadmapGeneratorSchema = {
+export const generateRoadmapValidation = {
   body: z.object({
-    goal: z.string().trim().min(3),
-    currentLevel: z.string().trim().min(2).optional(),
-    timeframe: z.string().trim().min(2).optional(),
-    hoursPerWeek: z.number().int().positive().optional(),
-    preferredTopics: z.array(z.string().trim().min(1)).optional(),
+    goal: z.string().trim().min(3, "Goal must be at least 3 characters"),
+    level: userLevelEnum,
+    weeklyHours: z.number().min(1).max(80),
   }),
 };
 
-export const skillGapAnalyzerSchema = {
+export const analyzeSkillGapValidation = {
   body: z.object({
+    targetRole: z.string().trim().min(2, "Target role is required"),
     currentSkills: z.array(z.string().trim().min(1)).min(1),
-    targetRole: z.string().trim().min(2),
-    experienceLevel: z.string().trim().min(2).optional(),
   }),
 };
 
-export const projectRecommenderSchema = {
+export const recommendProjectsValidation = {
   body: z.object({
-    level: z.string().trim().min(2),
-    skills: z.array(z.string().trim().min(1)).optional(),
-    interests: z.array(z.string().trim().min(1)).optional(),
-    targetRole: z.string().trim().min(2).optional(),
+    role: z.string().trim().min(2, "Role is required"),
+    level: userLevelEnum,
+    skills: z.array(z.string().trim().min(1)).min(1),
   }),
 };
 
-export const careerChatSchema = {
+export const careerChatValidation = {
   body: z.object({
-    message: z.string().trim().min(2),
-    currentSkills: z.array(z.string().trim().min(1)).optional(),
-    targetRole: z.string().trim().min(2).optional(),
+    message: z.string().trim().min(2, "Message is required"),
+    context: z
+      .object({
+        goal: z.string().optional(),
+        level: userLevelEnum.optional(),
+        currentSkills: z.array(z.string()).optional(),
+      })
+      .optional(),
   }),
 };
+
+export const roadmapGeneratorSchema = generateRoadmapValidation;
+export const skillGapAnalyzerSchema = analyzeSkillGapValidation;
+export const projectRecommenderSchema = recommendProjectsValidation;
+export const careerChatSchema = careerChatValidation;
+export const chatValidation = careerChatValidation;
 
 export const aiLogQuerySchema = {
   query: z.object({

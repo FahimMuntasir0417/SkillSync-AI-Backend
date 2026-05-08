@@ -124,6 +124,10 @@ model User {
   supportMessages  SupportMessage[]
   notifications    Notification[]
   aiRequestLogs    AiRequestLog[]
+  aiRoadmaps       AiRoadmap[]
+  aiSkillGapAnalyses AiSkillGapAnalysis[]
+  aiProjectRecommendations AiProjectRecommendation[]
+  aiChatMessages   AiChatMessage[]
 
   @@index([role])
   @@index([status], name: "idx_user_status")
@@ -480,5 +484,62 @@ model AiRequestLog {
   @@index([userId])
   @@index([feature])
   @@index([status])
+  @@index([createdAt])
+}
+
+model AiRoadmap {
+  id          String   @id @default(uuid())
+  userId      String
+  goal        String
+  level       String
+  weeklyHours Int
+  response    Json
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model AiSkillGapAnalysis {
+  id            String   @id @default(uuid())
+  userId        String
+  targetRole    String
+  currentSkills Json
+  response      Json
+  createdAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model AiProjectRecommendation {
+  id        String   @id @default(uuid())
+  userId    String
+  role      String
+  level     String
+  skills    Json
+  response  Json
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model AiChatMessage {
+  id        String   @id @default(uuid())
+  userId    String
+  message   String
+  response  Json
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
   @@index([createdAt])
 }

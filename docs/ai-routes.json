@@ -12,7 +12,7 @@
     {
       "name": "Study Assistant",
       "method": "POST",
-      "url": "/api/v1/ai/chat",
+      "url": "/api/v1/ai/study-chat",
       "body": {
         "message": "Explain JWT refresh token in simple terms",
         "courseId": "course-uuid",
@@ -53,38 +53,34 @@
     {
       "name": "AI Roadmap Generator",
       "method": "POST",
-      "url": "/api/v1/ai/roadmap-generator",
+      "url": "/api/v1/ai/roadmap",
       "body": {
         "goal": "Become a backend developer",
-        "currentLevel": "beginner",
-        "timeframe": "6 months",
-        "hoursPerWeek": 10,
-        "preferredTopics": ["nodejs", "postgresql", "prisma"]
+        "level": "beginner",
+        "weeklyHours": 10
       },
-      "notes": "Authenticated users. Generates a structured learning roadmap from the user's goal."
+      "notes": "Authenticated users. Uses Gemini. Generates a structured learning roadmap from the user's goal."
     },
     {
       "name": "AI Skill Gap Analyzer",
       "method": "POST",
-      "url": "/api/v1/ai/skill-gap-analyzer",
+      "url": "/api/v1/ai/skill-gap",
       "body": {
         "currentSkills": ["html", "css", "javascript", "basic nodejs"],
-        "targetRole": "Backend Developer",
-        "experienceLevel": "junior"
+        "targetRole": "Backend Developer"
       },
-      "notes": "Authenticated users. Compares current skills against target role requirements."
+      "notes": "Authenticated users. Uses Gemini. Compares current skills against target role requirements."
     },
     {
       "name": "AI Project Recommender",
       "method": "POST",
-      "url": "/api/v1/ai/project-recommender",
+      "url": "/api/v1/ai/project-recommendations",
       "body": {
+        "role": "Backend Developer",
         "level": "intermediate",
-        "skills": ["nodejs", "express", "postgresql"],
-        "interests": ["api", "authentication", "deployment"],
-        "targetRole": "Backend Developer"
+        "skills": ["nodejs", "express", "postgresql"]
       },
-      "notes": "Authenticated users. Suggests portfolio projects by level, skills, and role target."
+      "notes": "Authenticated users. Uses OpenAI. Suggests portfolio projects by role, level, and skills."
     },
     {
       "name": "AI Career Chat Assistant",
@@ -92,10 +88,27 @@
       "url": "/api/v1/ai/career-chat",
       "body": {
         "message": "What should I learn after Express and Prisma?",
-        "currentSkills": ["javascript", "express", "prisma"],
-        "targetRole": "Backend Developer"
+        "context": {
+          "goal": "Become a backend developer",
+          "level": "intermediate",
+          "currentSkills": ["javascript", "express", "prisma"]
+        }
       },
-      "notes": "Authenticated users. Learning/career assistant chatbot for SkillSync AI."
+      "notes": "Authenticated users. Uses OpenAI. Learning/career assistant chatbot for SkillSync AI."
+    },
+    {
+      "name": "AI Chat Assistant",
+      "method": "POST",
+      "url": "/api/v1/ai/chat",
+      "body": {
+        "message": "How should I learn Prisma?",
+        "context": {
+          "goal": "Backend Developer",
+          "level": "beginner",
+          "currentSkills": ["JavaScript", "Node.js", "Express"]
+        }
+      },
+      "notes": "Authenticated users. Uses OpenAI. Main SkillSync AI assistant endpoint."
     },
     {
       "name": "AI Logs",

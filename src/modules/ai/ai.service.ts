@@ -11,14 +11,26 @@ import type {
   AssignmentFeedbackInput,
   BlogGeneratorInput,
   CareerChatInput,
+  ChatResponse,
   ChatInput,
   CourseSummaryInput,
   LogAiRequestInput,
+  ProjectRecommendationResponse,
   ProjectRecommenderInput,
   RecommendationInput,
+  RoadmapResponse,
   RoadmapGeneratorInput,
+  SkillGapResponse,
   SkillGapAnalyzerInput,
 } from "./ai.interface.js";
+import {
+  analyzeSkillGapWithGemini,
+  generateRoadmapWithGemini,
+} from "./gemini.service.js";
+import {
+  chatWithOpenAI,
+  recommendProjectsWithOpenAI,
+} from "./openai.service.js";
 
 const aiLogSelect = {
   id: true,
@@ -103,6 +115,23 @@ const runAiTask = async <T>(userId: string, feature: AiFeatureType, prompt: stri
   }
 };
 
+const runProviderTask = async <T>(
+  userId: string,
+  feature: AiFeatureType,
+  prompt: string,
+  task: () => Promise<T>,
+) => {
+  try {
+    const response = await task();
+    await logAiRequest({ userId, feature, prompt, response, status: AiRequestStatus.SUCCESS });
+    return response;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "AI request failed";
+    await logAiRequest({ userId, feature, prompt, status: AiRequestStatus.FAILED, error: message });
+    throw error;
+  }
+};
+
 const generateCourseSummary = async (payload: CourseSummaryInput, userId: string) => {
   const course = await prisma.course.findUnique({
     where: { id: payload.courseId },
@@ -147,35 +176,35 @@ const blogGenerator = async (payload: BlogGeneratorInput, userId: string) =>
   runAiTask(userId, AiFeatureType.BLOG_GENERATOR, `Generate a blog. Topic: ${payload.topic}. Tone: ${payload.tone ?? "professional"}. Audience: ${payload.targetAudience ?? "learners"}.`, "{ title: string; excerpt: string; content: string; tags: string[]; seoDescription: string }");
 
 const roadmapGenerator = async (payload: RoadmapGeneratorInput, userId: string) =>
-  runAiTask(
+  runProviderTask<RoadmapResponse>(
     userId,
     AiFeatureType.ROADMAP_GENERATOR,
-    `Create a learning roadmap for this user goal: ${JSON.stringify(payload)}`,
-    "{ roadmapTitle: string; estimatedDuration: string; phases: { title: string; duration: string; topics: string[]; resources: string[]; milestoneProject: string }[]; weeklyPlan: { week: number; focus: string; tasks: string[] }[]; successMetrics: string[] }",
+    `Gemini roadmap generator: ${JSON.stringify(payload)}`,
+    () => generateRoadmapWithGemini(payload),
   );
 
 const skillGapAnalyzer = async (payload: SkillGapAnalyzerInput, userId: string) =>
-  runAiTask(
+  runProviderTask<SkillGapResponse>(
     userId,
     AiFeatureType.SKILL_GAP_ANALYZER,
-    `Analyze skill gaps for this target role: ${JSON.stringify(payload)}`,
-    "{ targetRole: string; matchedSkills: string[]; missingSkills: string[]; priorityGaps: { skill: string; importance: string; reason: string }[]; learningPlan: { skill: string; steps: string[] }[] }",
+    `Gemini skill gap analyzer: ${JSON.stringify(payload)}`,
+    () => analyzeSkillGapWithGemini(payload),
   );
 
 const projectRecommender = async (payload: ProjectRecommenderInput, userId: string) =>
-  runAiTask(
+  runProviderTask<ProjectRecommendationResponse>(
     userId,
     AiFeatureType.PROJECT_RECOMMENDER,
-    `Recommend practical portfolio projects for this learner: ${JSON.stringify(payload)}`,
-    "{ projects: { title: string; difficulty: string; description: string; skillsPracticed: string[]; deliverables: string[]; stretchGoals: string[] }[] }",
+    `OpenAI project recommender: ${JSON.stringify(payload)}`,
+    () => recommendProjectsWithOpenAI(payload),
   );
 
 const careerChat = async (payload: CareerChatInput, userId: string) =>
-  runAiTask(
+  runProviderTask<ChatResponse>(
     userId,
     AiFeatureType.CAREER_CHAT_ASSISTANT,
-    `You are a learning and career assistant for SkillSync AI. Answer this user: ${JSON.stringify(payload)}`,
-    "{ answer: string; actionItems: string[]; suggestedQuestions: string[] }",
+    `OpenAI career chat assistant: ${JSON.stringify(payload)}`,
+    () => chatWithOpenAI(payload),
   );
 
 const getAiLogs = async (query: AiLogQuery) => {

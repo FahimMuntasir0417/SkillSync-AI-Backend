@@ -1,83 +1,85 @@
-import { betterAuth } from "better-auth";
-import { prismaAdapter } from "better-auth/adapters/prisma";
-import { bearer } from "better-auth/plugins";
 import { UserRole, UserStatus } from "@prisma/client";
 
 import { env } from "./env.js";
-import { prisma } from "./prisma.js";
 
-export const auth = betterAuth({
+/**
+ * Better Auth-ready architecture.
+ *
+ * Current production strategy:
+ * - JWT is the primary and active API authentication system.
+ * - Existing API guards read `Authorization: Bearer <accessToken>`.
+ * - Refresh token handling remains owned by the custom JWT auth module.
+ *
+ * Future OAuth/social-login strategy:
+ * - Better Auth can be enabled here when the Prisma User model and Better Auth
+ *   adapter mapping are fully verified for this schema.
+ * - Do not create a second User table or parallel user identity system.
+ * - Social accounts should link to the existing `users` table.
+ * - Better Auth routes are intentionally not mounted in `app.ts` yet.
+ */
+
+export const betterAuthReadyConfig = {
+  /**
+   * Future Better Auth secret.
+   *
+   * .env:
+   * BETTER_AUTH_SECRET="replace-with-better-auth-secret"
+   */
   secret: env.BETTER_AUTH_SECRET,
+
+  /**
+   * Future Better Auth base URL.
+   *
+   * Local:
+   * BETTER_AUTH_URL="http://localhost:5000"
+   *
+   * Production:
+   * BETTER_AUTH_URL="https://your-backend-domain.com"
+   */
   baseURL: env.BETTER_AUTH_URL,
-  basePath: "/api/auth",
-  database: prismaAdapter(prisma, {
+
+  /**
+   * Safe placeholder for Prisma adapter.
+   *
+   * Enable later only after confirming Better Auth's expected User, Account,
+   * Session, and Verification fields map cleanly to `prisma/schema.prisma`.
+   *
+   * Example future setup:
+   *
+   * import { betterAuth } from "better-auth";
+   * import { prismaAdapter } from "better-auth/adapters/prisma";
+   * import { bearer } from "better-auth/plugins";
+   * import { prisma } from "./prisma.js";
+   *
+   * export const auth = betterAuth({
+   *   secret: env.BETTER_AUTH_SECRET,
+   *   baseURL: env.BETTER_AUTH_URL,
+   *   database: prismaAdapter(prisma, { provider: "postgresql" }),
+   *   plugins: [bearer()],
+   * });
+   */
+  prismaAdapter: {
+    enabled: false,
     provider: "postgresql",
-  }),
-  emailAndPassword: {
-    enabled: true,
-    requireEmailVerification: false,
   },
-  socialProviders: {
-    google: {
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
-      redirectURI: `${env.BETTER_AUTH_URL}/api/auth/callback/google`,
-      mapProfileToUser: () => ({
-        role: UserRole.STUDENT,
-        status: UserStatus.ACTIVE,
-        needPasswordChange: false,
-        emailVerified: true,
-        isBlocked: false,
-        isDeleted: false,
-        deletedAt: null,
-      }),
+
+  /**
+   * Safe placeholder for Google OAuth.
+   *
+   * Do not mount `/api/auth/*` until this provider is tested end-to-end with
+   * the existing User model and callback URL.
+   */
+  googleProvider: {
+    enabled: false,
+    clientId: env.GOOGLE_CLIENT_ID,
+    clientSecret: env.GOOGLE_CLIENT_SECRET,
+    callbackURL: `${env.BETTER_AUTH_URL}/api/auth/callback/google`,
+    defaultUserFields: {
+      role: UserRole.STUDENT,
+      status: UserStatus.ACTIVE,
+      emailVerified: true,
+      isBlocked: false,
+      isDeleted: false,
     },
   },
-  user: {
-    additionalFields: {
-      role: {
-        type: "string",
-        required: true,
-        defaultValue: UserRole.STUDENT,
-      },
-      status: {
-        type: "string",
-        required: true,
-        defaultValue: UserStatus.ACTIVE,
-      },
-      needPasswordChange: {
-        type: "boolean",
-        required: true,
-        defaultValue: false,
-      },
-      isBlocked: {
-        type: "boolean",
-        required: true,
-        defaultValue: false,
-      },
-      isDeleted: {
-        type: "boolean",
-        required: true,
-        defaultValue: false,
-      },
-      deletedAt: {
-        type: "date",
-        required: false,
-        defaultValue: null,
-      },
-    },
-  },
-  plugins: [bearer()],
-  session: {
-    expiresIn: 60 * 60 * 24,
-    updateAge: 60 * 60 * 24,
-    cookieCache: {
-      enabled: true,
-      maxAge: 60 * 60 * 24,
-    },
-  },
-  trustedOrigins: [env.CLIENT_URL, env.BETTER_AUTH_URL],
-  advanced: {
-    useSecureCookies: env.NODE_ENV === "production",
-  },
-});
+} as const;
