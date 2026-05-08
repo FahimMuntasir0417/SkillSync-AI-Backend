@@ -1,0 +1,147 @@
+{
+  "module": "Users",
+  "baseUrl": "/api/v1/users",
+  "endpoints": [
+    {
+      "name": "Get All Users",
+      "method": "GET",
+      "url": "/api/v1/users",
+      "query": {
+        "search": "member",
+        "role": "STUDENT",
+        "isBlocked": false,
+        "page": 1,
+        "limit": 10,
+        "sortBy": "createdAt",
+        "sortOrder": "desc"
+      },
+      "notes": "Admin only. Requires Authorization: Bearer <accessToken>. Search works on name and email."
+    },
+    {
+      "name": "Get My Profile",
+      "method": "GET",
+      "url": "/api/v1/users/me",
+      "notes": "Authenticated users only. Requires Authorization: Bearer <accessToken>."
+    },
+    {
+      "name": "Update My Profile",
+      "method": "PATCH",
+      "url": "/api/v1/users/me",
+      "body": {
+        "name": "Updated Name",
+        "avatarUrl": "https://example.com/avatar.png",
+        "bio": "Full-stack learner"
+      },
+      "notes": "Authenticated users only. Requires Authorization: Bearer <accessToken>."
+    },
+    {
+      "name": "Change User Role",
+      "method": "PATCH",
+      "url": "/api/v1/users/:id/role",
+      "params": {
+        "id": "user-uuid"
+      },
+      "body": {
+        "role": "INSTRUCTOR"
+      },
+      "notes": "Admin only. Requires Authorization: Bearer <accessToken>. Allowed roles: STUDENT, INSTRUCTOR, ADMIN."
+    },
+    {
+      "name": "Block Or Unblock User",
+      "method": "PATCH",
+      "url": "/api/v1/users/:id/block",
+      "params": {
+        "id": "user-uuid"
+      },
+      "body": {
+        "isBlocked": true
+      },
+      "notes": "Admin only. Requires Authorization: Bearer <accessToken>. Set isBlocked to false to unblock."
+    }
+  ],
+  "responses": {
+    "listSuccess": {
+      "success": true,
+      "message": "Users retrieved successfully",
+      "meta": {
+        "page": 1,
+        "limit": 10,
+        "total": 1,
+        "totalPage": 1
+      },
+      "data": [
+        {
+          "id": "user-uuid",
+          "name": "SkillSync Member",
+          "email": "member@example.com",
+          "avatarUrl": "https://example.com/avatar.png",
+          "image": null,
+          "contactNumber": null,
+          "address": null,
+          "bio": "Full-stack learner",
+          "role": "STUDENT",
+          "status": "ACTIVE",
+          "emailVerified": true,
+          "needPasswordChange": false,
+          "isBlocked": false,
+          "isDeleted": false,
+          "deletedAt": null,
+          "createdAt": "2026-05-08T00:00:00.000Z",
+          "updatedAt": "2026-05-08T00:00:00.000Z"
+        }
+      ]
+    },
+    "profileSuccess": {
+      "success": true,
+      "message": "Profile retrieved successfully",
+      "data": {
+        "id": "user-uuid",
+        "name": "SkillSync Member",
+        "email": "member@example.com",
+        "avatarUrl": "https://example.com/avatar.png",
+        "image": null,
+        "contactNumber": null,
+        "address": null,
+        "bio": "Full-stack learner",
+        "role": "STUDENT",
+        "status": "ACTIVE",
+        "emailVerified": true,
+        "needPasswordChange": false,
+        "isBlocked": false,
+        "isDeleted": false,
+        "deletedAt": null,
+        "createdAt": "2026-05-08T00:00:00.000Z",
+        "updatedAt": "2026-05-08T00:00:00.000Z"
+      }
+    },
+    "roleUpdatedSuccess": {
+      "success": true,
+      "message": "User role updated successfully",
+      "data": {
+        "id": "user-uuid",
+        "name": "SkillSync Member",
+        "email": "member@example.com",
+        "role": "INSTRUCTOR",
+        "isBlocked": false
+      }
+    },
+    "unauthorizedError": {
+      "success": false,
+      "message": "Access token is required",
+      "errors": [
+        {
+          "message": "Access token is required"
+        }
+      ]
+    },
+    "forbiddenError": {
+      "success": false,
+      "message": "You are not authorized",
+      "errors": [
+        {
+          "message": "You are not authorized"
+        }
+      ]
+    }
+  }
+}

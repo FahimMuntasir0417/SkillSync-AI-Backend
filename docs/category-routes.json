@@ -1,0 +1,105 @@
+{
+  "module": "Categories",
+  "baseUrl": "/api/v1/categories",
+  "endpoints": [
+    {
+      "name": "Create Category",
+      "method": "POST",
+      "url": "/api/v1/categories",
+      "body": {
+        "name": "Frontend Development",
+        "description": "Courses about modern frontend engineering",
+        "iconUrl": "https://example.com/frontend.png"
+      },
+      "notes": "Admin only. Requires Authorization: Bearer <accessToken>. Slug is auto-generated from name."
+    },
+    {
+      "name": "Get Categories",
+      "method": "GET",
+      "url": "/api/v1/categories",
+      "notes": "Public route. Returns all categories with courseCount."
+    },
+    {
+      "name": "Get Category By ID",
+      "method": "GET",
+      "url": "/api/v1/categories/:id",
+      "params": {
+        "id": "category-uuid"
+      },
+      "notes": "Public route. Returns a single category with courseCount."
+    },
+    {
+      "name": "Update Category",
+      "method": "PATCH",
+      "url": "/api/v1/categories/:id",
+      "params": {
+        "id": "category-uuid"
+      },
+      "body": {
+        "name": "Modern Frontend Development",
+        "description": "Updated frontend engineering category",
+        "iconUrl": "https://example.com/modern-frontend.png"
+      },
+      "notes": "Admin only. Requires Authorization: Bearer <accessToken>. If name changes, slug is regenerated."
+    },
+    {
+      "name": "Delete Category",
+      "method": "DELETE",
+      "url": "/api/v1/categories/:id",
+      "params": {
+        "id": "category-uuid"
+      },
+      "notes": "Admin only. Requires Authorization: Bearer <accessToken>. Category cannot be deleted if courses exist."
+    }
+  ],
+  "responses": {
+    "createSuccess": {
+      "success": true,
+      "message": "Category created successfully",
+      "data": {
+        "id": "category-uuid",
+        "name": "Frontend Development",
+        "slug": "frontend-development",
+        "description": "Courses about modern frontend engineering",
+        "iconUrl": "https://example.com/frontend.png",
+        "createdAt": "2026-05-08T00:00:00.000Z",
+        "updatedAt": "2026-05-08T00:00:00.000Z",
+        "courseCount": 0
+      }
+    },
+    "listSuccess": {
+      "success": true,
+      "message": "Categories retrieved successfully",
+      "data": [
+        {
+          "id": "category-uuid",
+          "name": "Frontend Development",
+          "slug": "frontend-development",
+          "description": "Courses about modern frontend engineering",
+          "iconUrl": "https://example.com/frontend.png",
+          "createdAt": "2026-05-08T00:00:00.000Z",
+          "updatedAt": "2026-05-08T00:00:00.000Z",
+          "courseCount": 0
+        }
+      ]
+    },
+    "duplicateNameError": {
+      "success": false,
+      "message": "Category name already exists",
+      "errors": [
+        {
+          "message": "Category name already exists"
+        }
+      ]
+    },
+    "deleteBlockedError": {
+      "success": false,
+      "message": "Cannot delete category because it has courses",
+      "errors": [
+        {
+          "message": "Cannot delete category because it has courses"
+        }
+      ]
+    }
+  }
+}
