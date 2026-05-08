@@ -1,0 +1,119 @@
+{
+  "module": "Assignments",
+  "baseUrl": "/api/v1/assignments",
+  "endpoints": [
+    {
+      "name": "Create Assignment",
+      "method": "POST",
+      "url": "/api/v1/assignments",
+      "body": {
+        "title": "Build a REST API with Express and Prisma",
+        "description": "Create a production-ready CRUD API with validation and authentication.",
+        "courseId": "course-uuid",
+        "dueDate": "2026-06-01T23:59:59.000Z",
+        "status": "ACTIVE"
+      },
+      "notes": "Admin or owner instructor only. Requires Authorization: Bearer <accessToken>."
+    },
+    {
+      "name": "Get Assignments",
+      "method": "GET",
+      "url": "/api/v1/assignments",
+      "query": {
+        "courseId": "course-uuid",
+        "status": "ACTIVE",
+        "page": 1,
+        "limit": 10,
+        "sortBy": "createdAt",
+        "sortOrder": "desc"
+      },
+      "notes": "Authenticated users only. Admin sees all. Instructor sees own-course assignments. Student sees assignments for enrolled courses."
+    },
+    {
+      "name": "Get Assignment By ID",
+      "method": "GET",
+      "url": "/api/v1/assignments/:id",
+      "params": {
+        "id": "assignment-uuid"
+      },
+      "notes": "Authenticated users only. Visibility follows admin, owner instructor, or enrolled student rules."
+    },
+    {
+      "name": "Update Assignment",
+      "method": "PATCH",
+      "url": "/api/v1/assignments/:id",
+      "params": {
+        "id": "assignment-uuid"
+      },
+      "body": {
+        "title": "Build and Deploy a REST API",
+        "description": "Create and deploy a production-ready API with validation and authentication.",
+        "courseId": "course-uuid",
+        "dueDate": "2026-06-10T23:59:59.000Z",
+        "status": "CLOSED"
+      },
+      "notes": "Admin or owner instructor only. Requires Authorization: Bearer <accessToken>."
+    },
+    {
+      "name": "Delete Assignment",
+      "method": "DELETE",
+      "url": "/api/v1/assignments/:id",
+      "params": {
+        "id": "assignment-uuid"
+      },
+      "notes": "Admin or owner instructor only. Requires Authorization: Bearer <accessToken>. Related submissions are deleted by cascade."
+    }
+  ],
+  "responses": {
+    "createSuccess": {
+      "success": true,
+      "message": "Assignment created successfully",
+      "data": {
+        "id": "assignment-uuid",
+        "title": "Build a REST API with Express and Prisma",
+        "description": "Create a production-ready CRUD API with validation and authentication.",
+        "courseId": "course-uuid",
+        "dueDate": "2026-06-01T23:59:59.000Z",
+        "status": "ACTIVE",
+        "createdAt": "2026-05-08T00:00:00.000Z",
+        "updatedAt": "2026-05-08T00:00:00.000Z",
+        "course": {
+          "id": "course-uuid",
+          "title": "Complete Backend Development with Node.js",
+          "slug": "complete-backend-development-with-node-js",
+          "status": "PUBLISHED",
+          "instructorId": "instructor-uuid"
+        },
+        "submissionCount": 0
+      }
+    },
+    "listSuccess": {
+      "success": true,
+      "message": "Assignments retrieved successfully",
+      "meta": {
+        "page": 1,
+        "limit": 10,
+        "total": 1,
+        "totalPage": 1
+      },
+      "data": [
+        {
+          "id": "assignment-uuid",
+          "title": "Build a REST API with Express and Prisma",
+          "courseId": "course-uuid",
+          "status": "ACTIVE",
+          "submissionCount": 0
+        }
+      ]
+    },
+    "forbiddenError": {
+      "success": false,
+      "message": "You are not authorized",
+      "errors": [
+        {
+          "message": "You are not authorized"
+        }
+      ]
+    }
+  }
+}

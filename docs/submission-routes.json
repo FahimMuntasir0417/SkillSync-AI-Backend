@@ -1,0 +1,134 @@
+{
+  "module": "Submissions",
+  "baseUrl": "/api/v1/submissions",
+  "endpoints": [
+    {
+      "name": "Create Submission",
+      "method": "POST",
+      "url": "/api/v1/submissions",
+      "body": {
+        "assignmentId": "assignment-uuid",
+        "githubUrl": "https://github.com/user/project",
+        "liveUrl": "https://project.vercel.app",
+        "notes": "I implemented authentication, validation, and Prisma relations."
+      },
+      "notes": "Student only. Requires Authorization: Bearer <accessToken>. Student must be enrolled and assignment must be ACTIVE."
+    },
+    {
+      "name": "Get My Submissions",
+      "method": "GET",
+      "url": "/api/v1/submissions/my-submissions",
+      "notes": "Student only. Requires Authorization: Bearer <accessToken>."
+    },
+    {
+      "name": "Get Pending Submissions",
+      "method": "GET",
+      "url": "/api/v1/submissions/pending",
+      "query": {
+        "courseId": "course-uuid",
+        "status": "PENDING",
+        "page": 1,
+        "limit": 10,
+        "sortBy": "createdAt",
+        "sortOrder": "desc"
+      },
+      "notes": "Admin or instructor only. Instructor sees submissions only for own courses."
+    },
+    {
+      "name": "Get Submission By ID",
+      "method": "GET",
+      "url": "/api/v1/submissions/:id",
+      "params": {
+        "id": "submission-uuid"
+      },
+      "notes": "Owner student, owner instructor, or admin only."
+    },
+    {
+      "name": "Update Submission Status",
+      "method": "PATCH",
+      "url": "/api/v1/submissions/:id/status",
+      "params": {
+        "id": "submission-uuid"
+      },
+      "body": {
+        "status": "IN_REVIEW"
+      },
+      "notes": "Admin or owner instructor only. Allowed statuses: PENDING, IN_REVIEW, APPROVED, CHANGES_REQUESTED, REJECTED."
+    }
+  ],
+  "responses": {
+    "createSuccess": {
+      "success": true,
+      "message": "Submission created successfully",
+      "data": {
+        "id": "submission-uuid",
+        "assignmentId": "assignment-uuid",
+        "studentId": "student-uuid",
+        "githubUrl": "https://github.com/user/project",
+        "liveUrl": "https://project.vercel.app",
+        "notes": "I implemented authentication, validation, and Prisma relations.",
+        "status": "PENDING",
+        "createdAt": "2026-05-08T00:00:00.000Z",
+        "updatedAt": "2026-05-08T00:00:00.000Z",
+        "assignment": {
+          "id": "assignment-uuid",
+          "title": "Build a REST API with Express and Prisma",
+          "courseId": "course-uuid",
+          "status": "ACTIVE"
+        },
+        "student": {
+          "id": "student-uuid",
+          "name": "SkillSync Student",
+          "email": "student@example.com",
+          "role": "STUDENT"
+        },
+        "review": null
+      }
+    },
+    "pendingSuccess": {
+      "success": true,
+      "message": "Pending submissions retrieved successfully",
+      "meta": {
+        "page": 1,
+        "limit": 10,
+        "total": 1,
+        "totalPage": 1
+      },
+      "data": [
+        {
+          "id": "submission-uuid",
+          "assignmentId": "assignment-uuid",
+          "studentId": "student-uuid",
+          "status": "PENDING"
+        }
+      ]
+    },
+    "duplicateSubmissionError": {
+      "success": false,
+      "message": "You already submitted this assignment",
+      "errors": [
+        {
+          "message": "You already submitted this assignment"
+        }
+      ]
+    },
+    "inactiveAssignmentError": {
+      "success": false,
+      "message": "Assignment is not active",
+      "errors": [
+        {
+          "message": "Assignment is not active"
+        }
+      ]
+    },
+    "notEnrolledError": {
+      "success": false,
+      "message": "You must be enrolled in this course to submit assignments",
+      "errors": [
+        {
+          "message": "You must be enrolled in this course to submit assignments"
+        }
+      ]
+    }
+  }
+}

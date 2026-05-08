@@ -106,6 +106,30 @@
         "GET /api/v1/enrollments/:id",
         "PATCH /api/v1/enrollments/:id/progress"
       ]
+    },
+    {
+      "module": "Assignments",
+      "docs": "docs/assignment-routes.json",
+      "baseUrl": "/api/v1/assignments",
+      "endpoints": [
+        "POST /api/v1/assignments",
+        "GET /api/v1/assignments",
+        "GET /api/v1/assignments/:id",
+        "PATCH /api/v1/assignments/:id",
+        "DELETE /api/v1/assignments/:id"
+      ]
+    },
+    {
+      "module": "Submissions",
+      "docs": "docs/submission-routes.json",
+      "baseUrl": "/api/v1/submissions",
+      "endpoints": [
+        "POST /api/v1/submissions",
+        "GET /api/v1/submissions/my-submissions",
+        "GET /api/v1/submissions/pending",
+        "GET /api/v1/submissions/:id",
+        "PATCH /api/v1/submissions/:id/status"
+      ]
     }
   ]
 }
