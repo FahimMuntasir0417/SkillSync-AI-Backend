@@ -3,8 +3,8 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { bearer } from "better-auth/plugins";
 import { UserRole, UserStatus } from "@prisma/client";
 
-import { env } from "@/config/env.js";
-import { prisma } from "@/config/prisma.js";
+import { env } from "./env.js";
+import { prisma } from "./prisma.js";
 
 export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,

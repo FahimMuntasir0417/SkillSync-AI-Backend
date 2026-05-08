@@ -1,11 +1,11 @@
 import { UserRole } from "@prisma/client";
 import express from "express";
 
-import { checkAuth } from "@/common/middlewares/checkAuth.js";
-import { authRateLimiter } from "@/common/middlewares/rateLimiter.js";
-import { validateRequest } from "@/common/middlewares/validateRequest.js";
-import { multerUpload } from "@/config/multer.config.js";
-import { AuthController } from "@/modules/auth/auth.controller.js";
+import { checkAuth } from "../../common/middlewares/checkAuth.js";
+import { authRateLimiter } from "../../common/middlewares/rateLimiter.js";
+import { validateRequest } from "../../common/middlewares/validateRequest.js";
+import { multerUpload } from "../../config/multer.config.js";
+import { AuthController } from "./auth.controller.js";
 import {
   changePasswordSchema,
   forgetPasswordSchema,
@@ -14,7 +14,7 @@ import {
   resetPasswordSchema,
   updateMyProfileSchema,
   verifyEmailSchema,
-} from "@/modules/auth/auth.validation.js";
+} from "./auth.validation.js";
 
 const router = express.Router();
 

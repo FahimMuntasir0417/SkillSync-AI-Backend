@@ -2,7 +2,7 @@ import type { UserRole } from "@prisma/client";
 import type { RequestHandler } from "express";
 import httpStatus from "http-status";
 
-import { AppError } from "@/common/errors/AppError.js";
+import { AppError } from "../errors/AppError.js";
 
 export const roleGuard =
   (...allowedRoles: UserRole[]): RequestHandler =>

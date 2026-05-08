@@ -1,15 +1,15 @@
 import { UserRole } from "@prisma/client";
 import { Router } from "express";
 
-import { checkAuth } from "@/common/middlewares/checkAuth.js";
-import { roleGuard } from "@/common/middlewares/roleGuard.js";
-import { validateRequest } from "@/common/middlewares/validateRequest.js";
-import { userController } from "@/modules/users/user.controller.js";
+import { checkAuth } from "../../common/middlewares/checkAuth.js";
+import { roleGuard } from "../../common/middlewares/roleGuard.js";
+import { validateRequest } from "../../common/middlewares/validateRequest.js";
+import { userController } from "./user.controller.js";
 import {
   blockUserSchema,
   changeUserRoleSchema,
   updateUserProfileSchema,
-} from "@/modules/users/user.validation.js";
+} from "./user.validation.js";
 
 export const userRoute = Router();
 

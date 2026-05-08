@@ -2,19 +2,16 @@ import { UserRole } from "@prisma/client";
 import type { Prisma } from "@prisma/client";
 import httpStatus from "http-status";
 
-import { AppError } from "@/common/errors/AppError.js";
-import { calculatePagination } from "@/common/utils/pagination.js";
-import { prisma } from "@/config/prisma.js";
-import {
-  userSearchableFields,
-  userSortableFields,
-} from "@/modules/users/user.constant.js";
+import { AppError } from "../../common/errors/AppError.js";
+import { calculatePagination } from "../../common/utils/pagination.js";
+import { prisma } from "../../config/prisma.js";
+import { userSearchableFields, userSortableFields } from "./user.constant.js";
 import type {
   BlockUserInput,
   ChangeUserRoleInput,
   UpdateUserProfileInput,
   UserListQuery,
-} from "@/modules/users/user.interface.js";
+} from "./user.interface.js";
 
 const safeUserSelect = {
   id: true,

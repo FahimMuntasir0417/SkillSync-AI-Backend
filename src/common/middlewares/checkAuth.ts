@@ -2,10 +2,10 @@ import type { UserRole } from "@prisma/client";
 import type { RequestHandler } from "express";
 import httpStatus from "http-status";
 
-import { AppError } from "@/common/errors/AppError.js";
-import { catchAsync } from "@/common/utils/catchAsync.js";
-import { env } from "@/config/env.js";
-import { verifyToken } from "@/modules/auth/auth.utils.js";
+import { AppError } from "../errors/AppError.js";
+import { catchAsync } from "../utils/catchAsync.js";
+import { env } from "../../config/env.js";
+import { verifyToken } from "../../modules/auth/auth.utils.js";
 
 export const checkAuth = (...roles: UserRole[]): RequestHandler =>
   catchAsync(async (req, _res, next) => {

@@ -3,11 +3,11 @@ import { UserRole } from "@prisma/client";
 import { UserStatus } from "@prisma/client";
 import httpStatus from "http-status";
 
-import { AppError } from "@/common/errors/AppError.js";
-import { sendEmail } from "@/common/utils/email.js";
-import { calculatePagination } from "@/common/utils/pagination.js";
-import { prisma } from "@/config/prisma.js";
-import { env } from "@/config/env.js";
+import { AppError } from "../../common/errors/AppError.js";
+import { sendEmail } from "../../common/utils/email.js";
+import { calculatePagination } from "../../common/utils/pagination.js";
+import { prisma } from "../../config/prisma.js";
+import { env } from "../../config/env.js";
 import type {
   AuthUser,
   ChangePasswordInput,
@@ -20,13 +20,13 @@ import type {
   ResetPasswordInput,
   UpdateMyProfileInput,
   VerifyEmailInput,
-} from "@/modules/auth/auth.interface.js";
+} from "./auth.interface.js";
 import {
   comparePassword,
   createToken,
   hashPassword,
   verifyToken,
-} from "@/modules/auth/auth.utils.js";
+} from "./auth.utils.js";
 
 const userSelect = {
   id: true,

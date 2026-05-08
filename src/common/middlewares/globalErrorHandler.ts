@@ -3,8 +3,8 @@ import type { ErrorRequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import { ZodError } from "zod";
 
-import { AppError } from "@/common/errors/AppError.js";
-import { logger } from "@/config/logger.js";
+import { AppError } from "../errors/AppError.js";
+import { logger } from "../../config/logger.js";
 
 const { JsonWebTokenError, TokenExpiredError } = jwt;
 

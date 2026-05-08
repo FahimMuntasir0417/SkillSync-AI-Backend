@@ -1,3 +1,3 @@
-import { checkAuth } from "@/common/middlewares/checkAuth.js";
+import { checkAuth } from "./checkAuth.js";
 
 export const authGuard = checkAuth();

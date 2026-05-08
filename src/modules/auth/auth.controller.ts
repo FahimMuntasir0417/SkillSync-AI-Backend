@@ -1,11 +1,11 @@
 import type { CookieOptions, Response } from "express";
 import httpStatus from "http-status";
 
-import { AppError } from "@/common/errors/AppError.js";
-import { catchAsync } from "@/common/utils/catchAsync.js";
-import { sendResponse } from "@/common/utils/sendResponse.js";
-import { env } from "@/config/env.js";
-import { authService } from "@/modules/auth/auth.service.js";
+import { AppError } from "../../common/errors/AppError.js";
+import { catchAsync } from "../../common/utils/catchAsync.js";
+import { sendResponse } from "../../common/utils/sendResponse.js";
+import { env } from "../../config/env.js";
+import { authService } from "./auth.service.js";
 
 const refreshTokenCookieOptions: CookieOptions = {
   httpOnly: true,

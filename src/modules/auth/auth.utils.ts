@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import type { SignOptions } from "jsonwebtoken";
 
-import type { JwtPayload } from "@/modules/auth/auth.interface.js";
+import type { JwtPayload } from "./auth.interface.js";
 
 const SALT_ROUNDS = 12;
 

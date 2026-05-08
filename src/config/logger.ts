@@ -1,6 +1,9 @@
 import pino from "pino";
 
-import { env } from "@/config/env.js";
+import { env } from "./env.js";
+
+const shouldUsePrettyLogger =
+  env.NODE_ENV === "development" && process.env.VERCEL !== "1";
 
 export const logger = pino({
   level: env.NODE_ENV === "production" ? "info" : "debug",
@@ -14,7 +17,7 @@ export const logger = pino({
     censor: "[REDACTED]",
   },
   transport:
-    env.NODE_ENV === "development"
+    shouldUsePrettyLogger
       ? {
           target: "pino-pretty",
           options: {

@@ -1,9 +1,9 @@
 import httpStatus from "http-status";
 
-import { AppError } from "@/common/errors/AppError.js";
-import { catchAsync } from "@/common/utils/catchAsync.js";
-import { sendResponse } from "@/common/utils/sendResponse.js";
-import { userService } from "@/modules/users/user.service.js";
+import { AppError } from "../../common/errors/AppError.js";
+import { catchAsync } from "../../common/utils/catchAsync.js";
+import { sendResponse } from "../../common/utils/sendResponse.js";
+import { userService } from "./user.service.js";
 
 const getUsers = catchAsync(async (req, res) => {
   const result = await userService.getUsers(req.query);

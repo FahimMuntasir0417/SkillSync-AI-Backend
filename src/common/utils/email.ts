@@ -4,9 +4,9 @@ import path from "node:path";
 import status from "http-status";
 import nodemailer from "nodemailer";
 
-import { AppError } from "@/common/errors/AppError.js";
-import { env } from "@/config/env.js";
-import { logger } from "@/config/logger.js";
+import { AppError } from "../errors/AppError.js";
+import { env } from "../../config/env.js";
+import { logger } from "../../config/logger.js";
 
 type SendEmailPayload = {
   to: string;
