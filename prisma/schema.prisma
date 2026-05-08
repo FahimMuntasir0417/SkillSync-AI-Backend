@@ -16,6 +16,12 @@ enum UserRole {
   ADMIN
 }
 
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+  INACTIVE
+}
+
 enum CourseLevel {
   BEGINNER
   INTERMEDIATE
@@ -82,17 +88,27 @@ enum AiRequestStatus {
 // -----------------------------
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String?
-  avatarUrl String?
-  bio       String?
-  role      UserRole @default(STUDENT)
-  isBlocked Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 String     @id @default(uuid())
+  name               String     @db.VarChar(150)
+  email              String     @unique @db.VarChar(255)
+  password           String?
+  avatarUrl          String?    @db.VarChar(500)
+  image              String?    @db.VarChar(500)
+  contactNumber      String?    @db.VarChar(30)
+  address            String?    @db.VarChar(500)
+  bio                String?
+  role               UserRole   @default(STUDENT)
+  status             UserStatus @default(ACTIVE)
+  emailVerified      Boolean    @default(false)
+  needPasswordChange Boolean    @default(false)
+  isBlocked          Boolean    @default(false)
+  isDeleted          Boolean    @default(false)
+  deletedAt          DateTime?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
 
+  sessions         Session[]
+  accounts         Account[]
   courses          Course[]
   enrollments      Enrollment[]
   lessonProgresses LessonProgress[]
@@ -106,8 +122,59 @@ model User {
   aiRequestLogs    AiRequestLog[]
 
   @@index([role])
+  @@index([status], name: "idx_user_status")
   @@index([isBlocked])
+  @@index([isDeleted], name: "idx_user_is_deleted")
   @@index([createdAt])
+  @@map("users")
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verification")
 }
 
 // -----------------------------

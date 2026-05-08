@@ -1,0 +1,99 @@
+@baseUrl = http://localhost:5000
+@accessToken =
+@memberEmail = member@example.com
+@memberPassword = StrongPass123
+@verificationOtp = 123456
+@resetOtp = 123456
+
+### Register Member
+POST {{baseUrl}}/api/v1/auth/register
+
+Content-Type: application/json
+
+{
+  "name": "SkillSync Member",
+  "email": "{{memberEmail}}",
+  "password": "{{memberPassword}}"
+}
+
+
+### Login User
+POST {{baseUrl}}/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{memberEmail}}",
+  "password": "{{memberPassword}}"
+}
+
+### Get My Profile
+GET {{baseUrl}}/api/v1/auth/users/me
+Authorization: Bearer {{accessToken}}
+
+### Update My Profile
+PATCH {{baseUrl}}/api/v1/auth/users/me
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Updated Member",
+  "contactNumber": "+8801712345678",
+  "address": "Dhaka, Bangladesh",
+  "bio": "Learning AI and backend engineering"
+}
+
+### Get All Users
+GET {{baseUrl}}/api/v1/auth/users?page=1&limit=10&searchTerm=member&role=MEMBER&status=ACTIVE
+Authorization: Bearer {{accessToken}}
+
+### Refresh Token
+POST {{baseUrl}}/api/v1/auth/refresh-token
+
+### Change Password
+POST {{baseUrl}}/api/v1/auth/change-password
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "currentPassword": "{{memberPassword}}",
+  "newPassword": "NewStrongPass456"
+}
+
+### Logout User
+POST {{baseUrl}}/api/v1/auth/logout
+
+### Verify Email
+POST {{baseUrl}}/api/v1/auth/verify-email
+Content-Type: application/json
+
+{
+  "email": "{{memberEmail}}",
+  "otp": "{{verificationOtp}}"
+}
+
+### Forget Password
+POST {{baseUrl}}/api/v1/auth/forget-password
+Content-Type: application/json
+
+{
+  "email": "{{memberEmail}}"
+}
+
+### Reset Password
+POST {{baseUrl}}/api/v1/auth/reset-password
+Content-Type: application/json
+
+{
+  "email": "{{memberEmail}}",
+  "otp": "{{resetOtp}}",
+  "newPassword": "ResetPass789"
+}
+
+### Start Google Login
+GET {{baseUrl}}/api/v1/auth/login/google?callbackURL=http://localhost:3000/dashboard
+
+### Google Login Success
+GET {{baseUrl}}/api/v1/auth/google/success?redirect=/dashboard
+
+### OAuth Error Redirect
+GET {{baseUrl}}/api/v1/auth/oauth/error?error=oauth_failed

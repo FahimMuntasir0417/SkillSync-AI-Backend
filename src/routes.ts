@@ -1,5 +1,7 @@
 import { Router } from "express";
 
+import { authRoute } from "@/modules/auth/auth.route.js";
+
 export const routes = Router();
 
 routes.get("/health", (_req, res) => {
@@ -8,3 +10,5 @@ routes.get("/health", (_req, res) => {
     message: "SkillSync AI API is running",
   });
 });
+
+routes.use("/api/v1/auth", authRoute);

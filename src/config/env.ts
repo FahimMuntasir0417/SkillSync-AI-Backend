@@ -43,6 +43,11 @@ export const env = {
   BETTER_AUTH_URL: process.env.BETTER_AUTH_URL ?? "http://localhost:5000",
   GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ?? "",
   GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ?? "",
+  SMTP_HOST: process.env.SMTP_HOST ?? "",
+  SMTP_PORT: process.env.SMTP_PORT ?? "587",
+  SMTP_USER: process.env.SMTP_USER ?? "",
+  SMTP_PASS: process.env.SMTP_PASS ?? "",
+  SMTP_FROM: process.env.SMTP_FROM ?? "SkillSync AI <no-reply@skillsync.ai>",
   OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "",
   GEMINI_API_KEY: process.env.GEMINI_API_KEY ?? "",
 } as const;

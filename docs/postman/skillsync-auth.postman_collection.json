@@ -1,0 +1,311 @@
+{
+  "info": {
+    "_postman_id": "7b2d2db7-7e2b-4f69-98ad-8a311f53e147",
+    "name": "SkillSync AI - Auth",
+    "description": "Postman collection for SkillSync AI authentication routes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register Member",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json && json.data && json.data.accessToken) {",
+              "  pm.environment.set('accessToken', json.data.accessToken);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"SkillSync Member\",\n  \"email\": \"{{memberEmail}}\",\n  \"password\": \"{{memberPassword}}\"\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/auth/register",
+        "description": "Creates a member/student account, sends an email verification OTP, returns accessToken, and sets refreshToken cookie on success."
+      }
+    },
+    {
+      "name": "Login User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json && json.data && json.data.accessToken) {",
+              "  pm.environment.set('accessToken', json.data.accessToken);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{memberEmail}}\",\n  \"password\": \"{{memberPassword}}\"\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/auth/login",
+        "description": "Returns accessToken and sets refreshToken cookie on success."
+      }
+    },
+    {
+      "name": "Get My Profile",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/v1/auth/users/me",
+        "description": "Requires Authorization: Bearer <accessToken>."
+      }
+    },
+    {
+      "name": "Update My Profile",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "name",
+              "value": "Updated Member",
+              "type": "text"
+            },
+            {
+              "key": "contactNumber",
+              "value": "+8801712345678",
+              "type": "text"
+            },
+            {
+              "key": "address",
+              "value": "Dhaka, Bangladesh",
+              "type": "text"
+            },
+            {
+              "key": "bio",
+              "value": "Learning AI and backend engineering",
+              "type": "text"
+            },
+            {
+              "key": "image",
+              "type": "file",
+              "src": ""
+            }
+          ]
+        },
+        "url": "{{baseUrl}}/api/v1/auth/users/me",
+        "description": "Requires Authorization: Bearer <accessToken>. Pick an image file manually in Postman if needed."
+      }
+    },
+    {
+      "name": "Get All Users",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/v1/auth/users?page=1&limit=10&searchTerm=member&role=MEMBER&status=ACTIVE",
+        "description": "Admin only. MEMBER is accepted as an alias for SkillSync STUDENT."
+      }
+    },
+    {
+      "name": "Refresh Token",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json && json.data && json.data.accessToken) {",
+              "  pm.environment.set('accessToken', json.data.accessToken);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/api/v1/auth/refresh-token",
+        "description": "Requires refreshToken cookie."
+      }
+    },
+    {
+      "name": "Change Password",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{accessToken}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"currentPassword\": \"{{memberPassword}}\",\n  \"newPassword\": \"NewStrongPass456\"\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/auth/change-password",
+        "description": "Requires Authorization: Bearer <accessToken>."
+      }
+    },
+    {
+      "name": "Logout User",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/api/v1/auth/logout",
+        "description": "Clears refreshToken cookie."
+      }
+    },
+    {
+      "name": "Verify Email",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{memberEmail}}\",\n  \"otp\": \"{{verificationOtp}}\"\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/auth/verify-email"
+      }
+    },
+    {
+      "name": "Forget Password",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json && json.data && json.data.otp) {",
+              "  pm.environment.set('resetOtp', json.data.otp);",
+              "}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{memberEmail}}\"\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/auth/forget-password",
+        "description": "Sends password reset OTP by email. In development, OTP is also returned in response data."
+      }
+    },
+    {
+      "name": "Reset Password",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{memberEmail}}\",\n  \"otp\": \"{{resetOtp}}\",\n  \"newPassword\": \"ResetPass789\"\n}"
+        },
+        "url": "{{baseUrl}}/api/v1/auth/reset-password"
+      }
+    },
+    {
+      "name": "Start Google Login",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/v1/auth/login/google?callbackURL=http://localhost:3000/dashboard"
+      }
+    },
+    {
+      "name": "Google Login Success",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/v1/auth/google/success?redirect=/dashboard"
+      }
+    },
+    {
+      "name": "OAuth Error Redirect",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/v1/auth/oauth/error?error=oauth_failed"
+      }
+    }
+  ]
+}
