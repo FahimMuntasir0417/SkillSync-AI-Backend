@@ -95,6 +95,17 @@
         "DELETE /api/v1/lessons/:id",
         "PATCH /api/v1/lessons/:id/complete"
       ]
+    },
+    {
+      "module": "Enrollments",
+      "docs": "docs/enrollment-routes.json",
+      "baseUrl": "/api/v1/enrollments",
+      "endpoints": [
+        "POST /api/v1/enrollments/:courseId",
+        "GET /api/v1/enrollments/my-classes",
+        "GET /api/v1/enrollments/:id",
+        "PATCH /api/v1/enrollments/:id/progress"
+      ]
     }
   ]
 }

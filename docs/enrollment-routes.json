@@ -1,0 +1,157 @@
+{
+  "module": "Enrollments",
+  "baseUrl": "/api/v1/enrollments",
+  "endpoints": [
+    {
+      "name": "Enroll In Course",
+      "method": "POST",
+      "url": "/api/v1/enrollments/:courseId",
+      "params": {
+        "courseId": "course-uuid"
+      },
+      "notes": "Student only. Requires Authorization: Bearer <accessToken>. Course must be published. Duplicate enrollment is blocked."
+    },
+    {
+      "name": "Get My Classes",
+      "method": "GET",
+      "url": "/api/v1/enrollments/my-classes",
+      "notes": "Student only. Requires Authorization: Bearer <accessToken>. Returns course, category, instructor, and progress."
+    },
+    {
+      "name": "Get Enrollment By ID",
+      "method": "GET",
+      "url": "/api/v1/enrollments/:id",
+      "params": {
+        "id": "enrollment-uuid"
+      },
+      "notes": "Owner student or admin only. Requires Authorization: Bearer <accessToken>."
+    },
+    {
+      "name": "Update Enrollment Progress",
+      "method": "PATCH",
+      "url": "/api/v1/enrollments/:id/progress",
+      "params": {
+        "id": "enrollment-uuid"
+      },
+      "body": {
+        "progress": 35
+      },
+      "notes": "Owner student only. Requires Authorization: Bearer <accessToken>. Progress must be an integer between 0 and 100."
+    }
+  ],
+  "responses": {
+    "enrollSuccess": {
+      "success": true,
+      "message": "Enrolled in course successfully",
+      "data": {
+        "id": "enrollment-uuid",
+        "userId": "student-uuid",
+        "courseId": "course-uuid",
+        "progress": 0,
+        "createdAt": "2026-05-08T00:00:00.000Z",
+        "updatedAt": "2026-05-08T00:00:00.000Z",
+        "course": {
+          "id": "course-uuid",
+          "title": "Complete Backend Development with Node.js",
+          "slug": "complete-backend-development-with-node-js",
+          "shortDescription": "Learn to build scalable backend APIs with Express, Prisma, and PostgreSQL.",
+          "thumbnail": "https://example.com/backend-course.png",
+          "price": 49,
+          "level": "INTERMEDIATE",
+          "status": "PUBLISHED",
+          "durationInHours": 18,
+          "totalLessons": 10,
+          "averageRating": 4.8,
+          "totalReviews": 20,
+          "totalEnrollments": 101,
+          "category": {
+            "id": "category-uuid",
+            "name": "Backend Development",
+            "slug": "backend-development",
+            "iconUrl": "https://example.com/backend.png"
+          },
+          "instructor": {
+            "id": "instructor-uuid",
+            "name": "SkillSync Instructor",
+            "email": "instructor@example.com",
+            "avatarUrl": "https://example.com/avatar.png",
+            "image": null,
+            "bio": "Backend instructor",
+            "role": "INSTRUCTOR"
+          }
+        }
+      }
+    },
+    "myClassesSuccess": {
+      "success": true,
+      "message": "My classes retrieved successfully",
+      "data": [
+        {
+          "id": "enrollment-uuid",
+          "userId": "student-uuid",
+          "courseId": "course-uuid",
+          "progress": 35,
+          "createdAt": "2026-05-08T00:00:00.000Z",
+          "updatedAt": "2026-05-08T00:00:00.000Z",
+          "course": {
+            "id": "course-uuid",
+            "title": "Complete Backend Development with Node.js",
+            "slug": "complete-backend-development-with-node-js",
+            "category": {
+              "id": "category-uuid",
+              "name": "Backend Development",
+              "slug": "backend-development",
+              "iconUrl": "https://example.com/backend.png"
+            },
+            "instructor": {
+              "id": "instructor-uuid",
+              "name": "SkillSync Instructor",
+              "email": "instructor@example.com",
+              "avatarUrl": "https://example.com/avatar.png",
+              "image": null,
+              "bio": "Backend instructor",
+              "role": "INSTRUCTOR"
+            }
+          }
+        }
+      ]
+    },
+    "progressUpdatedSuccess": {
+      "success": true,
+      "message": "Enrollment progress updated successfully",
+      "data": {
+        "id": "enrollment-uuid",
+        "userId": "student-uuid",
+        "courseId": "course-uuid",
+        "progress": 35
+      }
+    },
+    "duplicateEnrollmentError": {
+      "success": false,
+      "message": "You are already enrolled",
+      "errors": [
+        {
+          "message": "You are already enrolled"
+        }
+      ]
+    },
+    "unpublishedCourseError": {
+      "success": false,
+      "message": "You can enroll only in published courses",
+      "errors": [
+        {
+          "message": "You can enroll only in published courses"
+        }
+      ]
+    },
+    "forbiddenError": {
+      "success": false,
+      "message": "You are not authorized",
+      "errors": [
+        {
+          "message": "You are not authorized"
+        }
+      ]
+    }
+  }
+}
