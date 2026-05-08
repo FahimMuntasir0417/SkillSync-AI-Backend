@@ -1,0 +1,125 @@
+{
+  "module": "AI",
+  "baseUrl": "/api/v1/ai",
+  "endpoints": [
+    {
+      "name": "Course Summary",
+      "method": "POST",
+      "url": "/api/v1/ai/course-summary",
+      "body": { "courseId": "course-uuid" },
+      "notes": "Authenticated users. Returns 503 if no AI provider key is configured."
+    },
+    {
+      "name": "Study Assistant",
+      "method": "POST",
+      "url": "/api/v1/ai/chat",
+      "body": {
+        "message": "Explain JWT refresh token in simple terms",
+        "courseId": "course-uuid",
+        "lessonId": "lesson-uuid"
+      },
+      "notes": "Authenticated users. courseId and lessonId are optional."
+    },
+    {
+      "name": "Recommendations",
+      "method": "POST",
+      "url": "/api/v1/ai/recommendations",
+      "body": { "interest": "backend development" },
+      "notes": "Authenticated users. Body is optional."
+    },
+    {
+      "name": "Assignment Feedback",
+      "method": "POST",
+      "url": "/api/v1/ai/assignment-feedback",
+      "body": {
+        "submissionId": "submission-uuid",
+        "githubUrl": "https://github.com/user/project",
+        "liveUrl": "https://project.vercel.app",
+        "notes": "I built an Express API with Prisma and JWT."
+      },
+      "notes": "Authenticated users. Send either submissionId or direct submission details."
+    },
+    {
+      "name": "Blog Generator",
+      "method": "POST",
+      "url": "/api/v1/ai/blog-generator",
+      "body": {
+        "topic": "How to learn backend development",
+        "tone": "professional",
+        "targetAudience": "junior developers"
+      },
+      "notes": "Authenticated users."
+    },
+    {
+      "name": "AI Roadmap Generator",
+      "method": "POST",
+      "url": "/api/v1/ai/roadmap-generator",
+      "body": {
+        "goal": "Become a backend developer",
+        "currentLevel": "beginner",
+        "timeframe": "6 months",
+        "hoursPerWeek": 10,
+        "preferredTopics": ["nodejs", "postgresql", "prisma"]
+      },
+      "notes": "Authenticated users. Generates a structured learning roadmap from the user's goal."
+    },
+    {
+      "name": "AI Skill Gap Analyzer",
+      "method": "POST",
+      "url": "/api/v1/ai/skill-gap-analyzer",
+      "body": {
+        "currentSkills": ["html", "css", "javascript", "basic nodejs"],
+        "targetRole": "Backend Developer",
+        "experienceLevel": "junior"
+      },
+      "notes": "Authenticated users. Compares current skills against target role requirements."
+    },
+    {
+      "name": "AI Project Recommender",
+      "method": "POST",
+      "url": "/api/v1/ai/project-recommender",
+      "body": {
+        "level": "intermediate",
+        "skills": ["nodejs", "express", "postgresql"],
+        "interests": ["api", "authentication", "deployment"],
+        "targetRole": "Backend Developer"
+      },
+      "notes": "Authenticated users. Suggests portfolio projects by level, skills, and role target."
+    },
+    {
+      "name": "AI Career Chat Assistant",
+      "method": "POST",
+      "url": "/api/v1/ai/career-chat",
+      "body": {
+        "message": "What should I learn after Express and Prisma?",
+        "currentSkills": ["javascript", "express", "prisma"],
+        "targetRole": "Backend Developer"
+      },
+      "notes": "Authenticated users. Learning/career assistant chatbot for SkillSync AI."
+    },
+    {
+      "name": "AI Logs",
+      "method": "GET",
+      "url": "/api/v1/ai/logs",
+      "query": {
+        "feature": "ROADMAP_GENERATOR",
+        "status": "SUCCESS",
+        "userId": "user-uuid",
+        "page": 1,
+        "limit": 10,
+        "sortBy": "createdAt",
+        "sortOrder": "desc"
+      },
+      "notes": "Admin only."
+    }
+  ],
+  "providerNotConfiguredError": {
+    "success": false,
+    "message": "AI provider is not configured",
+    "errors": [
+      {
+        "message": "AI provider is not configured"
+      }
+    ]
+  }
+}

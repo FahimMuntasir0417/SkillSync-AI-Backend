@@ -175,6 +175,33 @@
         "PATCH /api/v1/support/tickets/:id/status",
         "POST /api/v1/support/tickets/:id/replies"
       ]
+    },
+    {
+      "module": "Dashboard",
+      "docs": "docs/dashboard-routes.json",
+      "baseUrl": "/api/v1/dashboard",
+      "endpoints": [
+        "GET /api/v1/dashboard/student",
+        "GET /api/v1/dashboard/instructor",
+        "GET /api/v1/dashboard/admin"
+      ]
+    },
+    {
+      "module": "AI",
+      "docs": "docs/ai-routes.json",
+      "baseUrl": "/api/v1/ai",
+      "endpoints": [
+        "POST /api/v1/ai/course-summary",
+        "POST /api/v1/ai/chat",
+        "POST /api/v1/ai/recommendations",
+        "POST /api/v1/ai/assignment-feedback",
+        "POST /api/v1/ai/blog-generator",
+        "POST /api/v1/ai/roadmap-generator",
+        "POST /api/v1/ai/skill-gap-analyzer",
+        "POST /api/v1/ai/project-recommender",
+        "POST /api/v1/ai/career-chat",
+        "GET /api/v1/ai/logs"
+      ]
     }
   ]
 }

@@ -1,5 +1,6 @@
 import { Router } from "express";
 
+import { aiRoute } from "./modules/ai/ai.route.js";
 import { assignmentRoute } from "./modules/assignments/assignment.route.js";
 import { authRoute } from "./modules/auth/auth.route.js";
 import { blogRoute } from "./modules/blogs/blog.route.js";
@@ -7,6 +8,7 @@ import { categoryRoute } from "./modules/categories/category.route.js";
 import { courseReviewRoute } from "./modules/courseReviews/courseReview.route.js";
 import { courseModuleRoute } from "./modules/courseModules/courseModule.route.js";
 import { courseRoute } from "./modules/courses/course.route.js";
+import { dashboardRoute } from "./modules/dashboard/dashboard.route.js";
 import { enrollmentRoute } from "./modules/enrollments/enrollment.route.js";
 import { lessonRoute } from "./modules/lessons/lesson.route.js";
 import { reviewRoute } from "./modules/reviews/review.route.js";
@@ -36,3 +38,5 @@ routes.use("/api/v1", reviewRoute);
 routes.use("/api/v1", courseReviewRoute);
 routes.use("/api/v1/blogs", blogRoute);
 routes.use("/api/v1/support", supportRoute);
+routes.use("/api/v1/dashboard", dashboardRoute);
+routes.use("/api/v1/ai", aiRoute);

@@ -1,0 +1,70 @@
+{
+  "module": "Dashboard",
+  "baseUrl": "/api/v1/dashboard",
+  "endpoints": [
+    {
+      "name": "Student Dashboard",
+      "method": "GET",
+      "url": "/api/v1/dashboard/student",
+      "notes": "Student only. Returns enrollment, assignment, submission, and progress analytics from database."
+    },
+    {
+      "name": "Instructor Dashboard",
+      "method": "GET",
+      "url": "/api/v1/dashboard/instructor",
+      "notes": "Instructor only. Returns course, student, review, rating, enrollment, and assignment submission analytics from database."
+    },
+    {
+      "name": "Admin Dashboard",
+      "method": "GET",
+      "url": "/api/v1/dashboard/admin",
+      "notes": "Admin only. Returns platform analytics from database."
+    }
+  ],
+  "responses": {
+    "student": {
+      "success": true,
+      "message": "Student dashboard retrieved successfully",
+      "data": {
+        "totalEnrolledCourses": 4,
+        "averageProgress": 45,
+        "pendingAssignments": 3,
+        "submittedAssignments": 5,
+        "recentClasses": [],
+        "recentSubmissions": [],
+        "assignmentStatusStats": [],
+        "progressChart": []
+      }
+    },
+    "instructor": {
+      "success": true,
+      "message": "Instructor dashboard retrieved successfully",
+      "data": {
+        "totalCourses": 6,
+        "totalStudents": 120,
+        "pendingReviews": 8,
+        "averageCourseRating": 4.6,
+        "courseEnrollmentStats": [],
+        "assignmentSubmissionStats": []
+      }
+    },
+    "admin": {
+      "success": true,
+      "message": "Admin dashboard retrieved successfully",
+      "data": {
+        "totalUsers": 500,
+        "totalStudents": 450,
+        "totalInstructors": 40,
+        "totalCourses": 32,
+        "totalEnrollments": 900,
+        "totalBlogs": 12,
+        "openTickets": 7,
+        "totalAiRequests": 300,
+        "monthlyUserGrowth": [],
+        "courseCategoryDistribution": [],
+        "ticketStatusStats": [],
+        "aiUsageStats": []
+      }
+    }
+  }
+}
