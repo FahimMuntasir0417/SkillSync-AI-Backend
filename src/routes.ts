@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import { aiRoute } from "./modules/ai/ai.route.js";
 import { assignmentRoute } from "./modules/assignments/assignment.route.js";
+import { AuthController } from "./modules/auth/auth.controller.js";
 import { authRoute } from "./modules/auth/auth.route.js";
 import { blogRoute } from "./modules/blogs/blog.route.js";
 import { categoryRoute } from "./modules/categories/category.route.js";
@@ -25,6 +26,7 @@ routes.get("/health", (_req, res) => {
   });
 });
 
+routes.get("/api/auth/callback/google", AuthController.googleOAuthCallback);
 routes.use("/api/v1/auth", authRoute);
 routes.use("/api/v1/users", userRoute);
 routes.use("/api/v1/categories", categoryRoute);

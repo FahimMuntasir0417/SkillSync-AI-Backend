@@ -47,6 +47,14 @@ const userSelect = {
 
 type OtpPurpose = "email-verification" | "forget-password";
 
+type GoogleProfile = {
+  sub: string;
+  email: string;
+  email_verified?: boolean;
+  name?: string;
+  picture?: string;
+};
+
 const createJwtPayload = (user: Pick<AuthUser, "id" | "email" | "role">) => ({
   userId: user.id,
   email: user.email,
@@ -386,6 +394,84 @@ const resetPassword = async (payload: ResetPasswordInput): Promise<null> => {
   return null;
 };
 
+const loginWithGoogle = async (
+  profile: GoogleProfile,
+): Promise<LoginResponse & { refreshToken: string }> => {
+  if (!profile.email) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Google account email missing");
+  }
+
+  const existingUser = await prisma.user.findUnique({
+    where: {
+      email: profile.email,
+    },
+  });
+
+  if (existingUser?.isBlocked) {
+    throw new AppError(httpStatus.FORBIDDEN, "User account is blocked");
+  }
+
+  const user = existingUser
+    ? await prisma.user.update({
+        where: {
+          id: existingUser.id,
+        },
+        data: {
+          emailVerified: true,
+          avatarUrl: existingUser.avatarUrl ?? profile.picture,
+          image: existingUser.image ?? profile.picture,
+        },
+        select: userSelect,
+      })
+    : await prisma.user.create({
+        data: {
+          name: profile.name ?? profile.email.split("@")[0] ?? "Google user",
+          email: profile.email,
+          avatarUrl: profile.picture,
+          image: profile.picture,
+          role: UserRole.STUDENT,
+          status: UserStatus.ACTIVE,
+          emailVerified: true,
+        },
+        select: userSelect,
+      });
+
+  const account = await prisma.account.findFirst({
+    where: {
+      providerId: "google",
+      accountId: profile.sub,
+    },
+  });
+
+  if (account) {
+    await prisma.account.update({
+      where: {
+        id: account.id,
+      },
+      data: {
+        userId: user.id,
+      },
+    });
+  } else {
+    await prisma.account.create({
+      data: {
+        id: crypto.randomUUID(),
+        providerId: "google",
+        accountId: profile.sub,
+        userId: user.id,
+      },
+    });
+  }
+
+  const jwtPayload = createJwtPayload(user);
+
+  return {
+    accessToken: createAccessToken(jwtPayload),
+    refreshToken: createRefreshToken(jwtPayload),
+    user,
+  };
+};
+
 const updateMyProfile = async (
   userId: string,
   payload: UpdateMyProfileInput,
@@ -483,6 +569,7 @@ export const authService = {
   verifyEmail,
   forgetPassword,
   resetPassword,
+  loginWithGoogle,
   updateMyProfile,
   getAllUsers,
 };

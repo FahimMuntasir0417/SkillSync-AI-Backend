@@ -1,7 +1,7 @@
+import crypto from "node:crypto";
 import type { CookieOptions, Response } from "express";
 import httpStatus from "http-status";
 
-import { AppError } from "../../common/errors/AppError.js";
 import { catchAsync } from "../../common/utils/catchAsync.js";
 import { sendResponse } from "../../common/utils/sendResponse.js";
 import { env } from "../../config/env.js";
@@ -18,6 +18,14 @@ const accessTokenCookieOptions: CookieOptions = {
   httpOnly: true,
   secure: env.NODE_ENV === "production",
   sameSite: "lax",
+  path: "/",
+};
+
+const googleStateCookieOptions: CookieOptions = {
+  httpOnly: true,
+  secure: env.NODE_ENV === "production",
+  sameSite: "lax",
+  maxAge: 10 * 60 * 1000,
   path: "/",
 };
 
@@ -161,68 +169,125 @@ const resetPassword = catchAsync(async (req, res) => {
   });
 });
 
+const redirectToOAuthError = (res: Response, message: string) => {
+  const redirectUrl = new URL("/login", env.CLIENT_URL);
+  redirectUrl.searchParams.set("error", message);
+  res.redirect(redirectUrl.toString());
+};
+
+const getGoogleRedirectUri = () =>
+  `${env.BETTER_AUTH_URL.replace(/\/+$/, "")}/api/auth/callback/google`;
+
 const googleLogin = catchAsync(async (req, res) => {
   if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
-    throw new AppError(
-      httpStatus.SERVICE_UNAVAILABLE,
-      "Google OAuth is not configured",
-    );
+    redirectToOAuthError(res, "Google OAuth is not configured");
+    return;
   }
 
+  const state = crypto.randomUUID();
   const callbackURL =
     typeof req.query.callbackURL === "string"
       ? req.query.callbackURL
       : `${env.CLIENT_URL}/auth/google/success`;
+  const googleUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
 
-  const response = await fetch(
-    `${env.BETTER_AUTH_URL}/api/auth/sign-in/social`,
-    {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        provider: "google",
-        callbackURL,
-        errorCallbackURL: `${env.BETTER_AUTH_URL}/api/v1/auth/oauth/error`,
-      }),
-    },
-  );
+  googleUrl.searchParams.set("client_id", env.GOOGLE_CLIENT_ID);
+  googleUrl.searchParams.set("redirect_uri", getGoogleRedirectUri());
+  googleUrl.searchParams.set("response_type", "code");
+  googleUrl.searchParams.set("scope", "openid email profile");
+  googleUrl.searchParams.set("state", state);
+  googleUrl.searchParams.set("access_type", "offline");
+  googleUrl.searchParams.set("prompt", "select_account");
 
-  const result = (await response.json()) as {
-    url?: string;
-    message?: string;
-  };
-
-  if (!response.ok || !result.url) {
-    throw new AppError(
-      httpStatus.BAD_REQUEST,
-      result.message ?? "Unable to start Google OAuth",
-    );
-  }
-
-  res.redirect(result.url);
+  res.cookie("google_oauth_state", state, googleStateCookieOptions);
+  res.cookie("google_oauth_callback", callbackURL, googleStateCookieOptions);
+  res.redirect(googleUrl.toString());
 });
 
 const googleOAuthCallback = catchAsync(async (req, res) => {
-  const query = new URLSearchParams(
-    Object.entries(req.query).reduce<Record<string, string>>(
-      (params, [key, value]) => {
-        if (typeof value === "string") {
-          params[key] = value;
-        }
+  const code = typeof req.query.code === "string" ? req.query.code : null;
+  const state = typeof req.query.state === "string" ? req.query.state : null;
+  const callbackURL =
+    typeof req.cookies.google_oauth_callback === "string"
+      ? req.cookies.google_oauth_callback
+      : `${env.CLIENT_URL}/auth/google/success`;
 
-        return params;
+  res.clearCookie("google_oauth_state", googleStateCookieOptions);
+  res.clearCookie("google_oauth_callback", googleStateCookieOptions);
+
+  if (!code || !state || state !== req.cookies.google_oauth_state) {
+    redirectToOAuthError(res, "Invalid Google OAuth callback");
+    return;
+  }
+
+  const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: {
+      "content-type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      client_id: env.GOOGLE_CLIENT_ID,
+      client_secret: env.GOOGLE_CLIENT_SECRET,
+      code,
+      grant_type: "authorization_code",
+      redirect_uri: getGoogleRedirectUri(),
+    }),
+  });
+
+  const tokenResult = (await tokenResponse.json()) as {
+    access_token?: string;
+    error_description?: string;
+  };
+
+  if (!tokenResponse.ok || !tokenResult.access_token) {
+    redirectToOAuthError(
+      res,
+      tokenResult.error_description ?? "Unable to complete Google OAuth",
+    );
+    return;
+  }
+
+  const profileResponse = await fetch(
+    "https://www.googleapis.com/oauth2/v3/userinfo",
+    {
+      headers: {
+        Authorization: `Bearer ${tokenResult.access_token}`,
       },
-      {},
-    ),
+    },
   );
 
-  const redirectUrl = `${env.BETTER_AUTH_URL}/api/auth/callback/google${
-    query.size > 0 ? `?${query.toString()}` : ""
-  }`;
+  const profile = (await profileResponse.json()) as {
+    sub?: string;
+    email?: string;
+    email_verified?: boolean;
+    name?: string;
+    picture?: string;
+  };
 
-  res.redirect(redirectUrl);
+  if (!profileResponse.ok || !profile.sub || !profile.email) {
+    redirectToOAuthError(res, "Unable to read Google profile");
+    return;
+  }
+
+  const { refreshToken, ...loginData } = await authService.loginWithGoogle({
+    sub: profile.sub,
+    email: profile.email,
+    email_verified: profile.email_verified,
+    name: profile.name,
+    picture: profile.picture,
+  });
+
+  setAuthCookies(res, {
+    accessToken: loginData.accessToken,
+    refreshToken,
+  });
+
+  const redirectUrl = new URL(callbackURL);
+  redirectUrl.searchParams.set("accessToken", loginData.accessToken);
+  redirectUrl.searchParams.set("refreshToken", refreshToken);
+  redirectUrl.searchParams.set("role", loginData.user.role);
+
+  res.redirect(redirectUrl.toString());
 });
 
 const googleLoginSuccess = catchAsync(async (_req, res) => {

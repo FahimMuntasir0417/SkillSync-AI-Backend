@@ -135,6 +135,10 @@ Route JSON files are available in `docs/`:
 - `docs/dashboard-routes.json`
 - `docs/ai-routes.json`
 
+Frontend implementation guide:
+
+- `docs/frontend-nextjs-implementation.md`
+
 ## Environment Variables
 
 Copy `.env.example` to `.env` and configure:
