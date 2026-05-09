@@ -24,13 +24,13 @@ import type {
   SkillGapAnalyzerInput,
 } from "./ai.interface.js";
 import {
-  analyzeSkillGapWithOpenAI,
-  chatWithOpenAI,
-  generateRoadmapWithOpenAI,
-  recommendProjectsWithOpenAI,
-} from "./openai.service.js";
-
-const OPENAI_MODEL = "gpt-4.1-mini";
+  analyzeSkillGapWithGemini,
+  chatWithGemini,
+  GEMINI_MODEL,
+  generateRoadmapWithGemini,
+  generateJsonWithGemini,
+  recommendProjectsWithGemini,
+} from "./gemini.service.js";
 
 const aiLogSelect = {
   id: true,
@@ -59,17 +59,8 @@ const logAiRequest = (payload: LogAiRequestInput) =>
     },
   });
 
-const extractJson = (text: string) => {
-  const trimmed = text
-    .trim()
-    .replace(/^```json\s*/i, "")
-    .replace(/^```\s*/i, "")
-    .replace(/```$/i, "");
-  return JSON.parse(trimmed) as unknown;
-};
-
 const assertAiProviderConfigured = () => {
-  if (!env.OPENAI_API_KEY) {
+  if (!env.GEMINI_API_KEY) {
     throw new AppError(
       httpStatus.SERVICE_UNAVAILABLE,
       "AI provider is not configured",
@@ -79,30 +70,7 @@ const assertAiProviderConfigured = () => {
 
 const callAiProvider = async (prompt: string, responseShape: string) => {
   assertAiProviderConfigured();
-  const systemPrompt = `Return only valid JSON matching this TypeScript shape: ${responseShape}. Do not include markdown.`;
-
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${env.OPENAI_API_KEY}`,
-    },
-    body: JSON.stringify({
-      model: OPENAI_MODEL,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: prompt },
-      ],
-      temperature: 0.3,
-    }),
-  });
-  const data = (await response.json()) as {
-    choices?: { message?: { content?: string } }[];
-    error?: { message?: string };
-  };
-  if (!response.ok)
-    throw new Error(data.error?.message ?? "OpenAI request failed");
-  return extractJson(data.choices?.[0]?.message?.content ?? "");
+  return generateJsonWithGemini<unknown>(prompt, responseShape);
 };
 
 const runAiTask = async <T>(
@@ -291,8 +259,8 @@ const roadmapGenerator = async (
   runProviderTask<RoadmapResponse>(
     userId,
     AiFeatureType.ROADMAP_GENERATOR,
-    `OpenAI roadmap generator: ${JSON.stringify(payload)}`,
-    () => generateRoadmapWithOpenAI(payload),
+    `${GEMINI_MODEL} roadmap generator: ${JSON.stringify(payload)}`,
+    () => generateRoadmapWithGemini(payload),
   );
 
 const skillGapAnalyzer = async (
@@ -302,8 +270,8 @@ const skillGapAnalyzer = async (
   runProviderTask<SkillGapResponse>(
     userId,
     AiFeatureType.SKILL_GAP_ANALYZER,
-    `OpenAI skill gap analyzer: ${JSON.stringify(payload)}`,
-    () => analyzeSkillGapWithOpenAI(payload),
+    `${GEMINI_MODEL} skill gap analyzer: ${JSON.stringify(payload)}`,
+    () => analyzeSkillGapWithGemini(payload),
   );
 
 const projectRecommender = async (
@@ -313,16 +281,16 @@ const projectRecommender = async (
   runProviderTask<ProjectRecommendationResponse>(
     userId,
     AiFeatureType.PROJECT_RECOMMENDER,
-    `OpenAI project recommender: ${JSON.stringify(payload)}`,
-    () => recommendProjectsWithOpenAI(payload),
+    `${GEMINI_MODEL} project recommender: ${JSON.stringify(payload)}`,
+    () => recommendProjectsWithGemini(payload),
   );
 
 const careerChat = async (payload: CareerChatInput, userId: string) =>
   runProviderTask<ChatResponse>(
     userId,
     AiFeatureType.CAREER_CHAT_ASSISTANT,
-    `OpenAI career chat assistant: ${JSON.stringify(payload)}`,
-    () => chatWithOpenAI(payload),
+    `${GEMINI_MODEL} career chat assistant: ${JSON.stringify(payload)}`,
+    () => chatWithGemini(payload),
   );
 
 const getAiLogs = async (query: AiLogQuery) => {

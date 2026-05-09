@@ -7,7 +7,7 @@
       "method": "POST",
       "url": "/api/v1/ai/course-summary",
       "body": { "courseId": "course-uuid" },
-      "notes": "Authenticated users. Uses OpenAI gpt-4.1-mini. Returns 503 if no OpenAI provider key is configured."
+      "notes": "Authenticated users. Uses Gemini gemini-2.5-flash. Returns 503 if no Gemini provider key is configured."
     },
     {
       "name": "Study Assistant",
@@ -18,14 +18,14 @@
         "courseId": "course-uuid",
         "lessonId": "lesson-uuid"
       },
-      "notes": "Authenticated users. Uses OpenAI gpt-4.1-mini. courseId and lessonId are optional."
+      "notes": "Authenticated users. Uses Gemini gemini-2.5-flash. courseId and lessonId are optional."
     },
     {
       "name": "Recommendations",
       "method": "POST",
       "url": "/api/v1/ai/recommendations",
       "body": { "interest": "backend development" },
-      "notes": "Authenticated users. Uses OpenAI gpt-4.1-mini. Body is optional."
+      "notes": "Authenticated users. Uses Gemini gemini-2.5-flash. Body is optional."
     },
     {
       "name": "Assignment Feedback",
@@ -37,7 +37,7 @@
         "liveUrl": "https://project.vercel.app",
         "notes": "I built an Express API with Prisma and JWT."
       },
-      "notes": "Authenticated users. Uses OpenAI gpt-4.1-mini. Send either submissionId or direct submission details."
+      "notes": "Authenticated users. Uses Gemini gemini-2.5-flash. Send either submissionId or direct submission details."
     },
     {
       "name": "Blog Generator",
@@ -48,7 +48,7 @@
         "tone": "professional",
         "targetAudience": "junior developers"
       },
-      "notes": "Authenticated users. Uses OpenAI gpt-4.1-mini."
+      "notes": "Authenticated users. Uses Gemini gemini-2.5-flash."
     },
     {
       "name": "AI Roadmap Generator",
@@ -59,7 +59,7 @@
         "level": "beginner",
         "weeklyHours": 10
       },
-      "notes": "Authenticated users. Uses OpenAI gpt-4.1-mini. Generates a structured learning roadmap from the user's goal."
+      "notes": "Authenticated users. Uses Gemini gemini-2.5-flash. Generates a structured learning roadmap from the user's goal."
     },
     {
       "name": "AI Skill Gap Analyzer",
@@ -69,7 +69,7 @@
         "currentSkills": ["html", "css", "javascript", "basic nodejs"],
         "targetRole": "Backend Developer"
       },
-      "notes": "Authenticated users. Uses OpenAI gpt-4.1-mini. Compares current skills against target role requirements."
+      "notes": "Authenticated users. Uses Gemini gemini-2.5-flash. Compares current skills against target role requirements."
     },
     {
       "name": "AI Project Recommender",
@@ -80,7 +80,7 @@
         "level": "intermediate",
         "skills": ["nodejs", "express", "postgresql"]
       },
-      "notes": "Authenticated users. Uses OpenAI gpt-4.1-mini. Suggests portfolio projects by role, level, and skills."
+      "notes": "Authenticated users. Uses Gemini gemini-2.5-flash. Suggests portfolio projects by role, level, and skills."
     },
     {
       "name": "AI Career Chat Assistant",
@@ -94,7 +94,7 @@
           "currentSkills": ["javascript", "express", "prisma"]
         }
       },
-      "notes": "Authenticated users. Uses OpenAI gpt-4.1-mini. Learning/career assistant chatbot for SkillSync AI."
+      "notes": "Authenticated users. Uses Gemini gemini-2.5-flash. Learning/career assistant chatbot for SkillSync AI."
     },
     {
       "name": "AI Chat Assistant",
@@ -108,7 +108,7 @@
           "currentSkills": ["JavaScript", "Node.js", "Express"]
         }
       },
-      "notes": "Authenticated users. Uses OpenAI gpt-4.1-mini. Main SkillSync AI assistant endpoint."
+      "notes": "Authenticated users. Uses Gemini gemini-2.5-flash. Main SkillSync AI assistant endpoint."
     },
     {
       "name": "AI Logs",
