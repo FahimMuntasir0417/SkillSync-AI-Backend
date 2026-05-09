@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import type { CookieOptions, Response } from "express";
+import type { CookieOptions, Request, Response } from "express";
 import httpStatus from "http-status";
 
 import { catchAsync } from "../../common/utils/catchAsync.js";
@@ -175,8 +175,17 @@ const redirectToOAuthError = (res: Response, message: string) => {
   res.redirect(redirectUrl.toString());
 };
 
-const getGoogleRedirectUri = () =>
-  `${env.BETTER_AUTH_URL.replace(/\/+$/, "")}/api/auth/callback/google`;
+const getRequestOrigin = (req: Request) => {
+  const forwardedProto = req.get("x-forwarded-proto")?.split(",")[0]?.trim();
+  const forwardedHost = req.get("x-forwarded-host")?.split(",")[0]?.trim();
+  const protocol = forwardedProto || req.protocol;
+  const host = forwardedHost || req.get("host");
+
+  return host ? `${protocol}://${host}` : env.BETTER_AUTH_URL.replace(/\/+$/, "");
+};
+
+const getGoogleRedirectUri = (req: Request) =>
+  `${getRequestOrigin(req)}/api/auth/callback/google`;
 
 const googleLogin = catchAsync(async (req, res) => {
   if (!env.GOOGLE_CLIENT_ID || !env.GOOGLE_CLIENT_SECRET) {
@@ -192,7 +201,7 @@ const googleLogin = catchAsync(async (req, res) => {
   const googleUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
 
   googleUrl.searchParams.set("client_id", env.GOOGLE_CLIENT_ID);
-  googleUrl.searchParams.set("redirect_uri", getGoogleRedirectUri());
+  googleUrl.searchParams.set("redirect_uri", getGoogleRedirectUri(req));
   googleUrl.searchParams.set("response_type", "code");
   googleUrl.searchParams.set("scope", "openid email profile");
   googleUrl.searchParams.set("state", state);
@@ -230,7 +239,7 @@ const googleOAuthCallback = catchAsync(async (req, res) => {
       client_secret: env.GOOGLE_CLIENT_SECRET,
       code,
       grant_type: "authorization_code",
-      redirect_uri: getGoogleRedirectUri(),
+      redirect_uri: getGoogleRedirectUri(req),
     }),
   });
 
