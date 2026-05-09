@@ -24,13 +24,13 @@ import type {
   SkillGapAnalyzerInput,
 } from "./ai.interface.js";
 import {
-  analyzeSkillGapWithGemini,
-  generateRoadmapWithGemini,
-} from "./gemini.service.js";
-import {
+  analyzeSkillGapWithOpenAI,
   chatWithOpenAI,
+  generateRoadmapWithOpenAI,
   recommendProjectsWithOpenAI,
 } from "./openai.service.js";
+
+const OPENAI_MODEL = "gpt-4.1-mini";
 
 const aiLogSelect = {
   id: true,
@@ -69,7 +69,7 @@ const extractJson = (text: string) => {
 };
 
 const assertAiProviderConfigured = () => {
-  if (!env.OPENAI_API_KEY && !env.GEMINI_API_KEY) {
+  if (!env.OPENAI_API_KEY) {
     throw new AppError(
       httpStatus.SERVICE_UNAVAILABLE,
       "AI provider is not configured",
@@ -81,49 +81,28 @@ const callAiProvider = async (prompt: string, responseShape: string) => {
   assertAiProviderConfigured();
   const systemPrompt = `Return only valid JSON matching this TypeScript shape: ${responseShape}. Do not include markdown.`;
 
-  if (env.OPENAI_API_KEY) {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${env.OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: prompt },
-        ],
-        temperature: 0.3,
-      }),
-    });
-    const data = (await response.json()) as {
-      choices?: { message?: { content?: string } }[];
-      error?: { message?: string };
-    };
-    if (!response.ok)
-      throw new Error(data.error?.message ?? "OpenAI request failed");
-    return extractJson(data.choices?.[0]?.message?.content ?? "");
-  }
-
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${env.GEMINI_API_KEY}`,
-    {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: `${systemPrompt}\n\n${prompt}` }] }],
-        generationConfig: { temperature: 0.3 },
-      }),
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${env.OPENAI_API_KEY}`,
     },
-  );
+    body: JSON.stringify({
+      model: OPENAI_MODEL,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: prompt },
+      ],
+      temperature: 0.3,
+    }),
+  });
   const data = (await response.json()) as {
-    candidates?: { content?: { parts?: { text?: string }[] } }[];
+    choices?: { message?: { content?: string } }[];
     error?: { message?: string };
   };
   if (!response.ok)
-    throw new Error(data.error?.message ?? "Gemini request failed");
-  return extractJson(data.candidates?.[0]?.content?.parts?.[0]?.text ?? "");
+    throw new Error(data.error?.message ?? "OpenAI request failed");
+  return extractJson(data.choices?.[0]?.message?.content ?? "");
 };
 
 const runAiTask = async <T>(
@@ -312,8 +291,8 @@ const roadmapGenerator = async (
   runProviderTask<RoadmapResponse>(
     userId,
     AiFeatureType.ROADMAP_GENERATOR,
-    `Gemini roadmap generator: ${JSON.stringify(payload)}`,
-    () => generateRoadmapWithGemini(payload),
+    `OpenAI roadmap generator: ${JSON.stringify(payload)}`,
+    () => generateRoadmapWithOpenAI(payload),
   );
 
 const skillGapAnalyzer = async (
@@ -323,8 +302,8 @@ const skillGapAnalyzer = async (
   runProviderTask<SkillGapResponse>(
     userId,
     AiFeatureType.SKILL_GAP_ANALYZER,
-    `Gemini skill gap analyzer: ${JSON.stringify(payload)}`,
-    () => analyzeSkillGapWithGemini(payload),
+    `OpenAI skill gap analyzer: ${JSON.stringify(payload)}`,
+    () => analyzeSkillGapWithOpenAI(payload),
   );
 
 const projectRecommender = async (

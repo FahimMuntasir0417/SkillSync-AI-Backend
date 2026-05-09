@@ -49,7 +49,5 @@ export const env = {
   SMTP_PASS: process.env.SMTP_PASS ?? "",
   SMTP_FROM: process.env.SMTP_FROM ?? "SkillSync AI <no-reply@skillsync.ai>",
   OPENAI_API_KEY: process.env.OPENAI_API_KEY ?? "",
-  GEMINI_API_KEY: process.env.GEMINI_API_KEY ?? "",
   openAiApiKey: process.env.OPENAI_API_KEY ?? "",
-  geminiApiKey: process.env.GEMINI_API_KEY ?? "",
 } as const;
