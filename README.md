@@ -168,7 +168,7 @@ Development tools include TypeScript, Prisma CLI, tsx, tsup, Prettier, Node type
 - Backend Repo: https://github.com/FahimMuntasir0417/SkillSync-AI-Backend
 - Frontend Live: https://skill-sync-ai-frontend.vercel.app/
 - Backend Live: https://skill-sync-ai-backend.vercel.app/
-- Demo Video: Add final Google Drive walkthrough link after recording
+- Demo Video: https://drive.google.com/file/d/1emZQGxEL78LvL4-J-XpppBt8SJ6slVTa/view?usp=sharing
 
 ### Demo Credentials
 
@@ -176,9 +176,9 @@ Use demo credentials only for non-production demonstrations. Password values are
 
 | Role | Email | Password |
 | --- | --- | --- |
-| Student | `student@skillsync.ai` | `DEMO_STUDENT_PASSWORD` |
-| Instructor | `instructor@skillsync.ai` | `DEMO_INSTRUCTOR_PASSWORD` |
-| Admin | `admin@skillsync.ai` | `DEMO_ADMIN_PASSWORD` |
+| Student | `student@skillsync.ai` | `Student@123` |
+| Instructor | `instructor@skillsync.ai` | `Instructor@123` |
+| Admin | `admin@skillsync.ai` | `Admin@123` |
 
 ## Installation and Setup
 
