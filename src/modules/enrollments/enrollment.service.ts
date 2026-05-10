@@ -232,7 +232,7 @@ const enrollInCourse = async (courseId: string, user: EnrollmentUser) => {
     return createdEnrollment;
   });
 
-  void sendEmail({
+  await sendEmail({
     to: student.email,
     subject: "Your SkillSync AI enrollment is confirmed",
     templateName: "enrollment-confirmation",
