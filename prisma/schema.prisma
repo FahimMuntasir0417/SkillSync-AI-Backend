@@ -70,6 +70,12 @@ enum NotificationType {
   SYSTEM
 }
 
+enum PromotionRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum AiFeatureType {
   COURSE_SUMMARY
   STUDY_ASSISTANT
@@ -111,23 +117,25 @@ model User {
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
 
-  sessions         Session[]
-  accounts         Account[]
-  courses          Course[]
-  enrollments      Enrollment[]
-  lessonProgresses LessonProgress[]
-  submissions      Submission[]      @relation("StudentSubmissions")
-  reviews          Review[]          @relation("ReviewerReviews")
-  courseReviews    CourseReview[]
-  blogs            Blog[]
-  supportTickets   SupportTicket[]
-  supportMessages  SupportMessage[]
-  notifications    Notification[]
-  aiRequestLogs    AiRequestLog[]
-  aiRoadmaps       AiRoadmap[]
-  aiSkillGapAnalyses AiSkillGapAnalysis[]
-  aiProjectRecommendations AiProjectRecommendation[]
-  aiChatMessages   AiChatMessage[]
+  sessions                  Session[]
+  accounts                  Account[]
+  courses                   Course[]
+  enrollments               Enrollment[]
+  lessonProgresses          LessonProgress[]
+  submissions               Submission[]              @relation("StudentSubmissions")
+  reviews                   Review[]                  @relation("ReviewerReviews")
+  courseReviews             CourseReview[]
+  blogs                     Blog[]
+  supportTickets            SupportTicket[]
+  supportMessages           SupportMessage[]
+  notifications             Notification[]
+  promotionRequests         PromotionRequest[]        @relation("PromotionRequestUser")
+  reviewedPromotionRequests PromotionRequest[]        @relation("PromotionRequestReviewer")
+  aiRequestLogs             AiRequestLog[]
+  aiRoadmaps                AiRoadmap[]
+  aiSkillGapAnalyses        AiSkillGapAnalysis[]
+  aiProjectRecommendations  AiProjectRecommendation[]
+  aiChatMessages            AiChatMessage[]
 
   @@index([role])
   @@index([status], name: "idx_user_status")
@@ -224,12 +232,12 @@ model Course {
   createdAt        DateTime     @default(now())
   updatedAt        DateTime     @updatedAt
 
-  category     Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict)
-  instructor   User           @relation(fields: [instructorId], references: [id], onDelete: Cascade)
-  modules      CourseModule[]
-  enrollments  Enrollment[]
-  assignments  Assignment[]
-  reviews      CourseReview[]
+  category    Category       @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  instructor  User           @relation(fields: [instructorId], references: [id], onDelete: Cascade)
+  modules     CourseModule[]
+  enrollments Enrollment[]
+  assignments Assignment[]
+  reviews     CourseReview[]
 
   @@index([categoryId])
   @@index([instructorId])
@@ -466,6 +474,26 @@ model Notification {
   @@index([userId])
   @@index([type])
   @@index([isRead])
+  @@index([createdAt])
+}
+
+model PromotionRequest {
+  id            String                 @id @default(uuid())
+  userId        String
+  status        PromotionRequestStatus @default(PENDING)
+  message       String?
+  adminFeedback String?
+  reviewedById  String?
+  reviewedAt    DateTime?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  user       User  @relation("PromotionRequestUser", fields: [userId], references: [id], onDelete: Cascade)
+  reviewedBy User? @relation("PromotionRequestReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([status])
+  @@index([reviewedById])
   @@index([createdAt])
 }
 

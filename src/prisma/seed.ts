@@ -38,6 +38,7 @@ const resetDatabase = async () => {
   await prisma.aiSkillGapAnalysis.deleteMany();
   await prisma.aiRoadmap.deleteMany();
   await prisma.notification.deleteMany();
+  await prisma.promotionRequest.deleteMany();
   await prisma.supportMessage.deleteMany();
   await prisma.supportTicket.deleteMany();
   await prisma.review.deleteMany();
@@ -64,11 +65,12 @@ const main = async () => {
   const demoInstructorPassword = getRequiredSeedEnv("DEMO_INSTRUCTOR_PASSWORD");
   const demoAdminPassword = getRequiredSeedEnv("DEMO_ADMIN_PASSWORD");
 
-  const [studentPassword, instructorPassword, adminPassword] = await Promise.all([
-    hashPassword(demoStudentPassword),
-    hashPassword(demoInstructorPassword),
-    hashPassword(demoAdminPassword),
-  ]);
+  const [studentPassword, instructorPassword, adminPassword] =
+    await Promise.all([
+      hashPassword(demoStudentPassword),
+      hashPassword(demoInstructorPassword),
+      hashPassword(demoAdminPassword),
+    ]);
 
   const [student, instructor, admin] = await Promise.all([
     prisma.user.create({
@@ -131,7 +133,9 @@ const main = async () => {
     ),
   );
 
-  const categoryByName = new Map(categories.map((category) => [category.name, category]));
+  const categoryByName = new Map(
+    categories.map((category) => [category.name, category]),
+  );
 
   const coursesData = [
     {
@@ -141,7 +145,8 @@ const main = async () => {
       price: 49,
       durationInHours: 18,
       thumbnail: thumbnail("photo-1516321318423-f06f85e504b3"),
-      shortDescription: "Build scalable APIs with Express, Prisma, PostgreSQL, JWT, and production deployment.",
+      shortDescription:
+        "Build scalable APIs with Express, Prisma, PostgreSQL, JWT, and production deployment.",
       description:
         "A complete backend engineering course focused on API architecture, authentication, Prisma data modeling, validation, observability, and deployment workflows.",
     },
@@ -152,7 +157,8 @@ const main = async () => {
       price: 59,
       durationInHours: 16,
       thumbnail: thumbnail("photo-1555066931-4365d14bab8c"),
-      shortDescription: "Create polished frontend applications with Next.js, TypeScript, and modern UI patterns.",
+      shortDescription:
+        "Create polished frontend applications with Next.js, TypeScript, and modern UI patterns.",
       description:
         "Learn app routing, server components, API integration, form handling, and accessible interface design for production-grade frontend products.",
     },
@@ -163,7 +169,8 @@ const main = async () => {
       price: 89,
       durationInHours: 28,
       thumbnail: thumbnail("photo-1460925895917-afdab827c52f"),
-      shortDescription: "Design and ship a real SaaS product with authentication, billing-ready architecture, and dashboards.",
+      shortDescription:
+        "Design and ship a real SaaS product with authentication, billing-ready architecture, and dashboards.",
       description:
         "A project-driven course that connects frontend, backend, database, authorization, deployment, analytics, and admin workflows.",
     },
@@ -174,7 +181,8 @@ const main = async () => {
       price: 39,
       durationInHours: 14,
       thumbnail: thumbnail("photo-1544383835-bda2bc66a55d"),
-      shortDescription: "Model relational data, write efficient queries, and manage migrations confidently.",
+      shortDescription:
+        "Model relational data, write efficient queries, and manage migrations confidently.",
       description:
         "Master relational schema design, Prisma relations, migrations, indexes, transactions, pagination, and production database practices.",
     },
@@ -185,7 +193,8 @@ const main = async () => {
       price: 69,
       durationInHours: 15,
       thumbnail: thumbnail("photo-1677442136019-21780ecad995"),
-      shortDescription: "Add AI workflows to web products with structured prompts, logs, and provider safety checks.",
+      shortDescription:
+        "Add AI workflows to web products with structured prompts, logs, and provider safety checks.",
       description:
         "Learn to connect AI providers, design structured JSON outputs, log requests, handle provider failures, and build AI-assisted user experiences.",
     },
@@ -196,7 +205,8 @@ const main = async () => {
       price: 29,
       durationInHours: 10,
       thumbnail: thumbnail("photo-1518770660439-4636190af475"),
-      shortDescription: "Deploy APIs, manage environment variables, and monitor production releases.",
+      shortDescription:
+        "Deploy APIs, manage environment variables, and monitor production releases.",
       description:
         "A practical introduction to build pipelines, database migrations, serverless deployment, production env vars, and release checks.",
     },
@@ -207,7 +217,8 @@ const main = async () => {
       price: 35,
       durationInHours: 12,
       thumbnail: thumbnail("photo-1515879218367-8466d910aaa4"),
-      shortDescription: "Use TypeScript strict mode to design safer APIs, services, and application contracts.",
+      shortDescription:
+        "Use TypeScript strict mode to design safer APIs, services, and application contracts.",
       description:
         "Develop professional TypeScript habits with type narrowing, interfaces, generics, API DTOs, Prisma types, and strict compiler settings.",
     },
@@ -218,7 +229,8 @@ const main = async () => {
       price: 79,
       durationInHours: 20,
       thumbnail: thumbnail("photo-1563986768494-4dee2763ff3f"),
-      shortDescription: "Implement JWT auth, refresh tokens, RBAC, password reset, and secure middleware.",
+      shortDescription:
+        "Implement JWT auth, refresh tokens, RBAC, password reset, and secure middleware.",
       description:
         "A deep dive into authentication systems, secure cookies, authorization guards, password hashing, account protection, and production security headers.",
     },
@@ -245,7 +257,8 @@ const main = async () => {
           create: [
             {
               title: "Foundation and Architecture",
-              description: "Core ideas, project setup, and architecture decisions.",
+              description:
+                "Core ideas, project setup, and architecture decisions.",
               order: 1,
               lessons: {
                 create: [
@@ -253,13 +266,15 @@ const main = async () => {
                     title: `Introduction to ${courseData.title}`,
                     content: `This lesson explains what you will build in ${courseData.title} and how the course is structured.`,
                     videoUrl: "https://example.com/lesson-intro.mp4",
-                    resourceUrl: "https://example.com/resources/course-notes.pdf",
+                    resourceUrl:
+                      "https://example.com/resources/course-notes.pdf",
                     order: 1,
                     isPreview: true,
                   },
                   {
                     title: "Production Project Setup",
-                    content: "Configure a clean project structure, environment variables, scripts, and baseline tooling.",
+                    content:
+                      "Configure a clean project structure, environment variables, scripts, and baseline tooling.",
                     videoUrl: "https://example.com/lesson-setup.mp4",
                     order: 2,
                   },
@@ -268,21 +283,25 @@ const main = async () => {
             },
             {
               title: "Real-World Implementation",
-              description: "Build feature-complete workflows with validation and persistence.",
+              description:
+                "Build feature-complete workflows with validation and persistence.",
               order: 2,
               lessons: {
                 create: [
                   {
                     title: "Data Modeling and Validation",
-                    content: "Design practical data models and validate user input before it reaches business logic.",
+                    content:
+                      "Design practical data models and validate user input before it reaches business logic.",
                     videoUrl: "https://example.com/lesson-modeling.mp4",
                     order: 1,
                   },
                   {
                     title: "Testing and Deployment Readiness",
-                    content: "Prepare the project for production by checking build output, migrations, and manual testing flows.",
+                    content:
+                      "Prepare the project for production by checking build output, migrations, and manual testing flows.",
                     videoUrl: "https://example.com/lesson-deploy.mp4",
-                    resourceUrl: "https://example.com/resources/deployment-checklist.pdf",
+                    resourceUrl:
+                      "https://example.com/resources/deployment-checklist.pdf",
                     order: 2,
                   },
                 ],
@@ -308,7 +327,10 @@ const main = async () => {
       },
     });
 
-    const totalLessons = course.modules.reduce((sum, moduleItem) => sum + moduleItem.lessons.length, 0);
+    const totalLessons = course.modules.reduce(
+      (sum, moduleItem) => sum + moduleItem.lessons.length,
+      0,
+    );
     const updatedCourse = await prisma.course.update({
       where: { id: course.id },
       data: { totalLessons },
@@ -329,10 +351,18 @@ const main = async () => {
   await prisma.enrollment.create({
     data: { userId: student.id, courseId: secondCourse.id, progress: 25 },
   });
-  await prisma.course.update({ where: { id: firstCourse.id }, data: { totalEnrollments: 1 } });
-  await prisma.course.update({ where: { id: secondCourse.id }, data: { totalEnrollments: 1 } });
+  await prisma.course.update({
+    where: { id: firstCourse.id },
+    data: { totalEnrollments: 1 },
+  });
+  await prisma.course.update({
+    where: { id: secondCourse.id },
+    data: { totalEnrollments: 1 },
+  });
 
-  const completedLessons = firstCourse.modules.flatMap((moduleItem) => moduleItem.lessons).slice(0, 2);
+  const completedLessons = firstCourse.modules
+    .flatMap((moduleItem) => moduleItem.lessons)
+    .slice(0, 2);
   await prisma.lessonProgress.createMany({
     data: completedLessons.map((lesson) => ({
       userId: student.id,
@@ -348,7 +378,8 @@ const main = async () => {
       studentId: student.id,
       githubUrl: "https://github.com/FahimMuntasir0417/skillsync-demo-api",
       liveUrl: "https://skillsync-demo-api.vercel.app",
-      notes: "Implemented authentication, validation, Prisma relations, and deployment notes.",
+      notes:
+        "Implemented authentication, validation, Prisma relations, and deployment notes.",
       status: SubmissionStatus.APPROVED,
     },
   });
@@ -357,7 +388,8 @@ const main = async () => {
     data: {
       submissionId: submission.id,
       reviewerId: instructor.id,
-      feedback: "Strong structure and clean API design. Add broader integration tests in the next iteration.",
+      feedback:
+        "Strong structure and clean API design. Add broader integration tests in the next iteration.",
       score: 88,
     },
   });
@@ -368,19 +400,27 @@ const main = async () => {
         courseId: firstCourse.id,
         userId: student.id,
         rating: 5,
-        comment: "The backend architecture examples were practical and easy to apply.",
+        comment:
+          "The backend architecture examples were practical and easy to apply.",
       },
       {
         courseId: secondCourse.id,
         userId: student.id,
         rating: 4,
-        comment: "Clear explanation of frontend engineering workflow and API integration.",
+        comment:
+          "Clear explanation of frontend engineering workflow and API integration.",
       },
     ],
   });
 
-  await prisma.course.update({ where: { id: firstCourse.id }, data: { averageRating: 5, totalReviews: 1 } });
-  await prisma.course.update({ where: { id: secondCourse.id }, data: { averageRating: 4, totalReviews: 1 } });
+  await prisma.course.update({
+    where: { id: firstCourse.id },
+    data: { averageRating: 5, totalReviews: 1 },
+  });
+  await prisma.course.update({
+    where: { id: secondCourse.id },
+    data: { averageRating: 4, totalReviews: 1 },
+  });
 
   const blogs = [
     "How to Learn Backend Development in 2026",
@@ -409,7 +449,8 @@ const main = async () => {
     data: {
       userId: student.id,
       subject: "I cannot access my backend course",
-      message: "I enrolled in the backend course, but it was not visible in My Classes immediately.",
+      message:
+        "I enrolled in the backend course, but it was not visible in My Classes immediately.",
       priority: TicketPriority.HIGH,
       status: TicketStatus.IN_PROGRESS,
     },
@@ -425,7 +466,8 @@ const main = async () => {
       {
         ticketId: ticket.id,
         senderId: admin.id,
-        message: "We checked your enrollment and restored the course in My Classes.",
+        message:
+          "We checked your enrollment and restored the course in My Classes.",
       },
     ],
   });
@@ -465,7 +507,8 @@ const main = async () => {
       {
         userId: student.id,
         feature: AiFeatureType.SKILL_GAP_ANALYZER,
-        prompt: "Compare JavaScript skills with backend developer requirements.",
+        prompt:
+          "Compare JavaScript skills with backend developer requirements.",
         response: { missingSkills: ["PostgreSQL indexing", "API testing"] },
         status: AiRequestStatus.SUCCESS,
       },

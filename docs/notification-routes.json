@@ -1,0 +1,69 @@
+{
+  "module": "Notifications",
+  "baseUrl": "/api/v1/notifications",
+  "routes": [
+    {
+      "name": "Create Notification",
+      "method": "POST",
+      "url": "/api/v1/notifications",
+      "body": {
+        "userId": "user-uuid",
+        "title": "System update",
+        "message": "Your profile was updated.",
+        "type": "SYSTEM"
+      },
+      "notes": "Admin only. Creates an in-app notification for a user."
+    },
+    {
+      "name": "Get My Notifications",
+      "method": "GET",
+      "url": "/api/v1/notifications",
+      "query": {
+        "type": "ENROLLMENT",
+        "isRead": false,
+        "page": 1,
+        "limit": 10
+      },
+      "notes": "Authenticated users only. Returns only the current user's notifications."
+    },
+    {
+      "name": "Get Unread Count",
+      "method": "GET",
+      "url": "/api/v1/notifications/unread-count",
+      "notes": "Authenticated users only."
+    },
+    {
+      "name": "Mark All As Read",
+      "method": "PATCH",
+      "url": "/api/v1/notifications/read-all",
+      "notes": "Authenticated users only. Marks the current user's unread notifications as read."
+    },
+    {
+      "name": "Get Notification By ID",
+      "method": "GET",
+      "url": "/api/v1/notifications/:id",
+      "params": {
+        "id": "notification-uuid"
+      },
+      "notes": "Notification owner or admin only."
+    },
+    {
+      "name": "Mark Notification As Read",
+      "method": "PATCH",
+      "url": "/api/v1/notifications/:id/read",
+      "params": {
+        "id": "notification-uuid"
+      },
+      "notes": "Notification owner or admin only."
+    },
+    {
+      "name": "Delete Notification",
+      "method": "DELETE",
+      "url": "/api/v1/notifications/:id",
+      "params": {
+        "id": "notification-uuid"
+      },
+      "notes": "Notification owner or admin only."
+    }
+  ]
+}

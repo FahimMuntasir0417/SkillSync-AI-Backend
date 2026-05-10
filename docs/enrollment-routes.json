@@ -9,7 +9,7 @@
       "params": {
         "courseId": "course-uuid"
       },
-      "notes": "Student only. Requires Authorization: Bearer <accessToken>. Course must be published. Duplicate enrollment is blocked."
+      "notes": "Student only. Requires Authorization: Bearer <accessToken>. Course must be published. Duplicate enrollment is blocked. Sends an enrollment confirmation email and creates enrollment notifications for the student and instructor."
     },
     {
       "name": "Get My Classes",

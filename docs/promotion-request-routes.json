@@ -1,0 +1,48 @@
+{
+  "module": "Promotion Requests",
+  "baseUrl": "/api/v1/promotion-requests",
+  "routes": [
+    {
+      "name": "Create Instructor Promotion Request",
+      "method": "POST",
+      "url": "/api/v1/promotion-requests",
+      "body": {
+        "message": "I want to publish courses for backend engineering students."
+      },
+      "notes": "Student only. Creates a pending request and notifies admins. A student can have only one pending request."
+    },
+    {
+      "name": "Get Promotion Requests",
+      "method": "GET",
+      "url": "/api/v1/promotion-requests",
+      "query": {
+        "status": "PENDING",
+        "page": 1,
+        "limit": 10
+      },
+      "notes": "Authenticated users only. Admin sees all requests. Other users see only their own requests."
+    },
+    {
+      "name": "Get Promotion Request By ID",
+      "method": "GET",
+      "url": "/api/v1/promotion-requests/:id",
+      "params": {
+        "id": "promotion-request-uuid"
+      },
+      "notes": "Request owner or admin only."
+    },
+    {
+      "name": "Review Promotion Request",
+      "method": "PATCH",
+      "url": "/api/v1/promotion-requests/:id/review",
+      "params": {
+        "id": "promotion-request-uuid"
+      },
+      "body": {
+        "status": "APPROVED",
+        "adminFeedback": "Approved. You can now create courses."
+      },
+      "notes": "Admin only. APPROVED promotes the requester to INSTRUCTOR and notifies the user. REJECTED records feedback and notifies the user."
+    }
+  ]
+}

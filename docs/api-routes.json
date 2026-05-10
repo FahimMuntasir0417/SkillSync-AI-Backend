@@ -108,6 +108,31 @@
       ]
     },
     {
+      "module": "Notifications",
+      "docs": "docs/notification-routes.json",
+      "baseUrl": "/api/v1/notifications",
+      "endpoints": [
+        "POST /api/v1/notifications",
+        "GET /api/v1/notifications",
+        "GET /api/v1/notifications/unread-count",
+        "PATCH /api/v1/notifications/read-all",
+        "GET /api/v1/notifications/:id",
+        "PATCH /api/v1/notifications/:id/read",
+        "DELETE /api/v1/notifications/:id"
+      ]
+    },
+    {
+      "module": "Promotion Requests",
+      "docs": "docs/promotion-request-routes.json",
+      "baseUrl": "/api/v1/promotion-requests",
+      "endpoints": [
+        "POST /api/v1/promotion-requests",
+        "GET /api/v1/promotion-requests",
+        "GET /api/v1/promotion-requests/:id",
+        "PATCH /api/v1/promotion-requests/:id/review"
+      ]
+    },
+    {
       "module": "Assignments",
       "docs": "docs/assignment-routes.json",
       "baseUrl": "/api/v1/assignments",

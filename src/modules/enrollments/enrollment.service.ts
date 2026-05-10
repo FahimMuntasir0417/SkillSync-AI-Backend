@@ -1,7 +1,13 @@
-import { CourseStatus, Prisma, UserRole } from "@prisma/client";
+import {
+  CourseStatus,
+  NotificationType,
+  Prisma,
+  UserRole,
+} from "@prisma/client";
 import httpStatus from "http-status";
 
 import { AppError } from "../../common/errors/AppError.js";
+import { sendEmail } from "../../common/utils/email.js";
 import { prisma } from "../../config/prisma.js";
 import type {
   EnrollmentUser,
@@ -112,7 +118,9 @@ const enrollInCourse = async (courseId: string, user: EnrollmentUser) => {
     },
     select: {
       id: true,
+      title: true,
       status: true,
+      instructorId: true,
     },
   });
 
@@ -143,6 +151,15 @@ const enrollInCourse = async (courseId: string, user: EnrollmentUser) => {
     throw new AppError(httpStatus.CONFLICT, "You are already enrolled");
   }
 
+  const student = await prisma.user.findUnique({
+    where: { id: user.userId },
+    select: { id: true, name: true, email: true },
+  });
+
+  if (!student) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
   const enrollment = await prisma.$transaction(async (tx) => {
     const createdEnrollment = await tx.enrollment.create({
       data: {
@@ -163,7 +180,35 @@ const enrollInCourse = async (courseId: string, user: EnrollmentUser) => {
       },
     });
 
+    await tx.notification.create({
+      data: {
+        userId: user.userId,
+        title: "Enrollment confirmed",
+        message: `You are enrolled in ${course.title}.`,
+        type: NotificationType.ENROLLMENT,
+      },
+    });
+
+    await tx.notification.create({
+      data: {
+        userId: course.instructorId,
+        title: "New student enrollment",
+        message: `${student.name} enrolled in ${course.title}.`,
+        type: NotificationType.ENROLLMENT,
+      },
+    });
+
     return createdEnrollment;
+  });
+
+  await sendEmail({
+    to: student.email,
+    subject: "Your SkillSync AI enrollment is confirmed",
+    templateName: "enrollment-confirmation",
+    templateData: {
+      name: student.name,
+      courseTitle: course.title,
+    },
   });
 
   return formatEnrollment(enrollment);
