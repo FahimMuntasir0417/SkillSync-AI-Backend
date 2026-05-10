@@ -8,6 +8,8 @@ import httpStatus from "http-status";
 
 import { AppError } from "../../common/errors/AppError.js";
 import { sendEmail } from "../../common/utils/email.js";
+import { env } from "../../config/env.js";
+import { logger } from "../../config/logger.js";
 import { prisma } from "../../config/prisma.js";
 import type {
   EnrollmentUser,
@@ -65,6 +67,40 @@ const enrollmentSelect = {
   },
 } satisfies Prisma.EnrollmentSelect;
 
+const enrollmentEmailCourseSelect = {
+  ...courseSelect,
+  categoryId: true,
+  instructorId: true,
+  description: true,
+  previewVideoUrl: true,
+  createdAt: true,
+  updatedAt: true,
+  modules: {
+    orderBy: {
+      order: "asc",
+    },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      order: true,
+      lessons: {
+        orderBy: {
+          order: "asc",
+        },
+        select: {
+          id: true,
+          title: true,
+          order: true,
+          isPreview: true,
+          videoUrl: true,
+          resourceUrl: true,
+        },
+      },
+    },
+  },
+} satisfies Prisma.CourseSelect;
+
 const toNumber = (value: Prisma.Decimal | number): number => Number(value);
 
 const formatEnrollment = <
@@ -116,12 +152,7 @@ const enrollInCourse = async (courseId: string, user: EnrollmentUser) => {
     where: {
       id: courseId,
     },
-    select: {
-      id: true,
-      title: true,
-      status: true,
-      instructorId: true,
-    },
+    select: enrollmentEmailCourseSelect,
   });
 
   if (!course) {
@@ -201,14 +232,59 @@ const enrollInCourse = async (courseId: string, user: EnrollmentUser) => {
     return createdEnrollment;
   });
 
-  await sendEmail({
+  void sendEmail({
     to: student.email,
     subject: "Your SkillSync AI enrollment is confirmed",
     templateName: "enrollment-confirmation",
     templateData: {
       name: student.name,
       courseTitle: course.title,
+      course: {
+        averageRating: course.averageRating,
+        category: course.category.name,
+        courseUrl: `${env.CLIENT_URL}/courses/${course.slug}`,
+        description: course.description,
+        durationInHours: course.durationInHours,
+        instructor: {
+          bio: course.instructor.bio,
+          email: course.instructor.email,
+          name: course.instructor.name,
+        },
+        level: course.level,
+        modules: course.modules.map((moduleItem) => ({
+          description: moduleItem.description,
+          lessons: moduleItem.lessons.map((lesson) => ({
+            isPreview: lesson.isPreview,
+            order: lesson.order,
+            resourceUrl: lesson.resourceUrl,
+            title: lesson.title,
+            videoUrl: lesson.videoUrl,
+          })),
+          order: moduleItem.order,
+          title: moduleItem.title,
+        })),
+        price: toNumber(course.price),
+        previewVideoUrl: course.previewVideoUrl,
+        shortDescription: course.shortDescription,
+        slug: course.slug,
+        startLearningUrl: `${env.CLIENT_URL}/my-classes`,
+        thumbnail: course.thumbnail,
+        totalEnrollments: course.totalEnrollments,
+        totalLessons: course.totalLessons,
+        totalModules: course.modules.length,
+        totalReviews: course.totalReviews,
+      },
     },
+  }).catch((error: unknown) => {
+    logger.error(
+      {
+        error,
+        courseId,
+        enrollmentId: enrollment.id,
+        userId: user.userId,
+      },
+      "Enrollment confirmation email failed after enrollment was created",
+    );
   });
 
   return formatEnrollment(enrollment);

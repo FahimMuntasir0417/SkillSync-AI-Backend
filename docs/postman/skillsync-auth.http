@@ -90,7 +90,7 @@ Content-Type: application/json
 }
 
 ### Start Google Login
-GET {{baseUrl}}/api/v1/auth/login/google?callbackURL=http://localhost:3000/dashboard
+GET {{baseUrl}}/api/v1/auth/login/google?callbackURL=https://skill-sync-ai-frontend.vercel.app/dashboard
 
 ### Google Login Success
 GET {{baseUrl}}/api/v1/auth/google/success?redirect=/dashboard

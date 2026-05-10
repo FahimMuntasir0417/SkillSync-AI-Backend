@@ -24,14 +24,14 @@ NEXT_PUBLIC_BACKEND_URL=http://localhost:5000
 For production:
 
 ```env
-NEXT_PUBLIC_API_BASE_URL=https://your-backend-domain.com/api/v1
-NEXT_PUBLIC_BACKEND_URL=https://your-backend-domain.com
+NEXT_PUBLIC_API_BASE_URL=https://skill-sync-ai-backend.vercel.app/api/v1
+NEXT_PUBLIC_BACKEND_URL=https://skill-sync-ai-backend.vercel.app
 ```
 
 The backend `CLIENT_URL` must match the frontend origin, for example:
 
 ```env
-CLIENT_URL=http://localhost:3000
+CLIENT_URL=https://skill-sync-ai-frontend.vercel.app
 ```
 
 ## Suggested Folder Structure
@@ -464,8 +464,8 @@ Frontend should display:
 
 ## Production Checklist
 
-- Set backend `CLIENT_URL` to the deployed frontend URL.
-- Set frontend `NEXT_PUBLIC_API_BASE_URL` to the deployed backend `/api/v1`.
+- Set backend `CLIENT_URL` to `https://skill-sync-ai-frontend.vercel.app`.
+- Set frontend `NEXT_PUBLIC_API_BASE_URL` to `https://skill-sync-ai-backend.vercel.app/api/v1`.
 - Use HTTPS in production.
 - Hide UI actions that the current role cannot perform.
 - Keep protected dashboard routes behind an auth guard.
@@ -475,4 +475,3 @@ Frontend should display:
 - Add optimistic updates only where rollback is simple.
 - Keep AI tools rate-limit friendly with disabled submit buttons while pending.
 - Test student, instructor, and admin flows separately.
-

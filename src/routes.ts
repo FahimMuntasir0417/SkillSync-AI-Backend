@@ -1,5 +1,7 @@
 import { Router } from "express";
 
+import { cacheResponse } from "./common/middlewares/cacheResponse.js";
+import { env } from "./config/env.js";
 import { aiRoute } from "./modules/ai/ai.route.js";
 import { assignmentRoute } from "./modules/assignments/assignment.route.js";
 import { AuthController } from "./modules/auth/auth.controller.js";
@@ -25,14 +27,21 @@ routes.get("/health", (_req, res) => {
   res.status(200).json({
     success: true,
     message: "SkillSync AI API is running",
+    data: {
+      environment: env.NODE_ENV,
+      service: "skillsync-ai-backend",
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      version: process.env.npm_package_version ?? "0.1.0",
+    },
   });
 });
 
 routes.get("/api/auth/callback/google", AuthController.googleOAuthCallback);
 routes.use("/api/v1/auth", authRoute);
 routes.use("/api/v1/users", userRoute);
-routes.use("/api/v1/categories", categoryRoute);
-routes.use("/api/v1/courses", courseRoute);
+routes.use("/api/v1/categories", cacheResponse(60), categoryRoute);
+routes.use("/api/v1/courses", cacheResponse(60), courseRoute);
 routes.use("/api/v1/course-modules", courseModuleRoute);
 routes.use("/api/v1/lessons", lessonRoute);
 routes.use("/api/v1/enrollments", enrollmentRoute);
@@ -42,7 +51,7 @@ routes.use("/api/v1/assignments", assignmentRoute);
 routes.use("/api/v1/submissions", submissionRoute);
 routes.use("/api/v1", reviewRoute);
 routes.use("/api/v1", courseReviewRoute);
-routes.use("/api/v1/blogs", blogRoute);
+routes.use("/api/v1/blogs", cacheResponse(60), blogRoute);
 routes.use("/api/v1/support", supportRoute);
 routes.use("/api/v1/dashboard", dashboardRoute);
 routes.use("/api/v1/ai", aiRoute);

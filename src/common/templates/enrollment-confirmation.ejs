@@ -1,9 +1,161 @@
 <!doctype html>
 <html>
-  <body>
-    <h2>Enrollment confirmed</h2>
-    <p>Hello <%= name %>,</p>
-    <p>You are now enrolled in <strong><%= courseTitle %></strong>.</p>
-    <p>You can start learning from your SkillSync AI classes page.</p>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Enrollment confirmed</title>
+  </head>
+  <body style="margin:0;background:#f4f7fb;color:#172033;font-family:Arial,Helvetica,sans-serif;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f4f7fb;padding:28px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:680px;background:#ffffff;border:1px solid #dbe4f0;border-radius:18px;overflow:hidden;">
+            <tr>
+              <td style="padding:28px 28px 18px;">
+                <p style="margin:0 0 10px;color:#4f46e5;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">SkillSync AI Enrollment</p>
+                <h1 style="margin:0;color:#111827;font-size:28px;line-height:1.25;">Enrollment confirmed</h1>
+                <p style="margin:18px 0 0;color:#364152;font-size:16px;line-height:1.6;">Hello <%= name %>,</p>
+                <p style="margin:10px 0 0;color:#364152;font-size:16px;line-height:1.6;">
+                  You are now enrolled in <strong><%= courseTitle %></strong>. Here is your complete course summary.
+                </p>
+              </td>
+            </tr>
+
+            <% if (course.thumbnail) { %>
+              <tr>
+                <td style="padding:0 28px 20px;">
+                  <img src="<%= course.thumbnail %>" alt="<%= courseTitle %>" width="624" style="display:block;width:100%;max-width:624px;border-radius:14px;border:1px solid #e5e7eb;" />
+                </td>
+              </tr>
+            <% } %>
+
+            <tr>
+              <td style="padding:0 28px 24px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;">
+                  <tr>
+                    <td style="padding:20px;">
+                      <h2 style="margin:0 0 8px;color:#111827;font-size:22px;line-height:1.3;"><%= courseTitle %></h2>
+                      <p style="margin:0;color:#475569;font-size:15px;line-height:1.6;"><%= course.shortDescription %></p>
+                      <p style="margin:14px 0 0;color:#475569;font-size:14px;line-height:1.7;"><%= course.description %></p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:0 28px 24px;">
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td width="50%" style="padding:8px;">
+                      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
+                        <p style="margin:0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Category</p>
+                        <p style="margin:6px 0 0;color:#111827;font-size:15px;font-weight:700;"><%= course.category %></p>
+                      </div>
+                    </td>
+                    <td width="50%" style="padding:8px;">
+                      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
+                        <p style="margin:0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Level</p>
+                        <p style="margin:6px 0 0;color:#111827;font-size:15px;font-weight:700;"><%= course.level %></p>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="50%" style="padding:8px;">
+                      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
+                        <p style="margin:0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Duration</p>
+                        <p style="margin:6px 0 0;color:#111827;font-size:15px;font-weight:700;"><%= course.durationInHours %> hours</p>
+                      </div>
+                    </td>
+                    <td width="50%" style="padding:8px;">
+                      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
+                        <p style="margin:0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Price</p>
+                        <p style="margin:6px 0 0;color:#111827;font-size:15px;font-weight:700;"><%= course.price === 0 ? "Free" : "$" + course.price %></p>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="50%" style="padding:8px;">
+                      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
+                        <p style="margin:0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Curriculum</p>
+                        <p style="margin:6px 0 0;color:#111827;font-size:15px;font-weight:700;"><%= course.totalModules %> modules · <%= course.totalLessons %> lessons</p>
+                      </div>
+                    </td>
+                    <td width="50%" style="padding:8px;">
+                      <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;padding:14px;">
+                        <p style="margin:0;color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;">Reviews</p>
+                        <p style="margin:6px 0 0;color:#111827;font-size:15px;font-weight:700;"><%= course.averageRating %>/5 from <%= course.totalReviews %> reviews</p>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:0 28px 24px;">
+                <h3 style="margin:0 0 12px;color:#111827;font-size:18px;">Instructor</h3>
+                <div style="border:1px solid #e2e8f0;border-radius:14px;padding:16px;">
+                  <p style="margin:0;color:#111827;font-size:16px;font-weight:700;"><%= course.instructor.name %></p>
+                  <p style="margin:4px 0 0;color:#64748b;font-size:14px;"><%= course.instructor.email %></p>
+                  <% if (course.instructor.bio) { %>
+                    <p style="margin:10px 0 0;color:#475569;font-size:14px;line-height:1.6;"><%= course.instructor.bio %></p>
+                  <% } %>
+                </div>
+              </td>
+            </tr>
+
+            <% if (course.modules.length) { %>
+              <tr>
+                <td style="padding:0 28px 24px;">
+                  <h3 style="margin:0 0 12px;color:#111827;font-size:18px;">Course outline</h3>
+                  <% course.modules.forEach(function(moduleItem) { %>
+                    <div style="border:1px solid #e2e8f0;border-radius:14px;padding:16px;margin-bottom:12px;">
+                      <p style="margin:0;color:#111827;font-size:15px;font-weight:700;">
+                        Module <%= moduleItem.order %>: <%= moduleItem.title %>
+                      </p>
+                      <% if (moduleItem.description) { %>
+                        <p style="margin:6px 0 0;color:#64748b;font-size:13px;line-height:1.5;"><%= moduleItem.description %></p>
+                      <% } %>
+                      <% if (moduleItem.lessons.length) { %>
+                        <ul style="margin:10px 0 0;padding-left:18px;color:#475569;font-size:13px;line-height:1.7;">
+                          <% moduleItem.lessons.slice(0, 6).forEach(function(lesson) { %>
+                            <li>
+                              <%= lesson.title %><% if (lesson.isPreview) { %> <strong style="color:#4f46e5;">Preview</strong><% } %>
+                            </li>
+                          <% }) %>
+                          <% if (moduleItem.lessons.length > 6) { %>
+                            <li><%= moduleItem.lessons.length - 6 %> more lessons inside this module</li>
+                          <% } %>
+                        </ul>
+                      <% } %>
+                    </div>
+                  <% }) %>
+                </td>
+              </tr>
+            <% } %>
+
+            <tr>
+              <td style="padding:4px 28px 30px;">
+                <table role="presentation" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td style="border-radius:10px;background:#4f46e5;">
+                      <a href="<%= course.startLearningUrl %>" style="display:inline-block;padding:13px 18px;color:#ffffff;text-decoration:none;font-size:14px;font-weight:700;">Start learning</a>
+                    </td>
+                    <td style="width:12px;"></td>
+                    <td style="border-radius:10px;border:1px solid #cbd5e1;">
+                      <a href="<%= course.courseUrl %>" style="display:inline-block;padding:12px 18px;color:#172033;text-decoration:none;font-size:14px;font-weight:700;">View course</a>
+                    </td>
+                  </tr>
+                </table>
+                <% if (course.previewVideoUrl) { %>
+                  <p style="margin:14px 0 0;color:#64748b;font-size:13px;">Preview video: <a href="<%= course.previewVideoUrl %>" style="color:#4f46e5;"><%= course.previewVideoUrl %></a></p>
+                <% } %>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
   </body>
 </html>
