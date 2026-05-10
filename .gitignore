@@ -1,8 +1,6 @@
 node_modules
 dist
 .dist
-.env
-.env.*
 !.env.example
 coverage
 *.log
@@ -13,3 +11,4 @@ pnpm-debug.log*
 
 .vercel
 docs/.post-route-demo-data.json
+config.bat

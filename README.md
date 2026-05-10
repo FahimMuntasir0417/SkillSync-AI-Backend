@@ -121,13 +121,13 @@ SkillSync AI Backend API solves this with a modular Express architecture where e
 
 Add final deployed screenshots before submission. Recommended file names are included so the README can point to stable assets once captured.
 
-| Area | Target File |
-| --- | --- |
-| Landing page | `docs/screenshots/landing-page.png` |
-| Course listing | `docs/screenshots/course-listing.png` |
-| Course details | `docs/screenshots/course-details.png` |
+| Area              | Target File                              |
+| ----------------- | ---------------------------------------- |
+| Landing page      | `docs/screenshots/landing-page.png`      |
+| Course listing    | `docs/screenshots/course-listing.png`    |
+| Course details    | `docs/screenshots/course-details.png`    |
 | Student dashboard | `docs/screenshots/student-dashboard.png` |
-| Admin dashboard | `docs/screenshots/admin-dashboard.png` |
+| Admin dashboard   | `docs/screenshots/admin-dashboard.png`   |
 | AI roadmap result | `docs/screenshots/ai-roadmap-result.png` |
 
 ## Dependencies
@@ -174,11 +174,11 @@ Development tools include TypeScript, Prisma CLI, tsx, tsup, Prettier, Node type
 
 Use demo credentials only for non-production demonstrations. Password values are controlled by seed environment variables.
 
-| Role | Email | Password |
-| --- | --- | --- |
-| Student | `student@skillsync.ai` | `Student@123` |
+| Role       | Email                     | Password         |
+| ---------- | ------------------------- | ---------------- |
+| Student    | `student@skillsync.ai`    | `Student@123`    |
 | Instructor | `instructor@skillsync.ai` | `Instructor@123` |
-| Admin | `admin@skillsync.ai` | `Admin@123` |
+| Admin      | `admin@skillsync.ai`      | `Admin@123`      |
 
 ## Installation and Setup
 
@@ -252,8 +252,8 @@ Create a `.env` file in the project root. Do not commit real secrets.
 ```env
 NODE_ENV=development
 PORT=5000
-DATABASE_URL="postgresql://postgres:password@localhost:5432/skillsync_ai_db?schema=public"
-CLIENT_URL="https://skill-sync-ai-frontend.vercel.app"
+DATABASE_URL=your database url
+CLIENT_URL= your backend deploy link
 ```
 
 ### Auth and Tokens
@@ -264,7 +264,7 @@ JWT_REFRESH_SECRET="replace-with-secure-refresh-secret"
 JWT_ACCESS_EXPIRES_IN="15m"
 JWT_REFRESH_EXPIRES_IN="7d"
 BETTER_AUTH_SECRET="replace-with-better-auth-secret"
-BETTER_AUTH_URL="https://skill-sync-ai-backend.vercel.app"
+BETTER_AUTH_URL=your backend url
 ```
 
 ### Google OAuth
@@ -363,26 +363,26 @@ Request
 
 ### Module Map
 
-| Module | Base Route | Responsibility |
-| --- | --- | --- |
-| Health | `/health` | Confirms API availability |
-| Auth | `/api/v1/auth` | Registration, login, refresh token, logout, profile, email verification, password reset, Google OAuth helpers |
-| Users | `/api/v1/users` | User listing, profile update, role change, blocking |
-| Categories | `/api/v1/categories` | Course category management |
-| Courses | `/api/v1/courses` | Course CRUD, public catalog, featured courses, related courses, course details |
-| Course Modules | `/api/v1/course-modules` | Course module creation, update, delete |
-| Lessons | `/api/v1/lessons` | Lesson creation, update, delete, completion |
-| Enrollments | `/api/v1/enrollments` | Course enrollment, my classes, progress update, enrollment details |
-| Assignments | `/api/v1/assignments` | Assignment CRUD and filtered assignment listing |
-| Submissions | `/api/v1/submissions` | Student submissions, my submissions, pending reviews, status updates |
-| Submission Reviews | `/api/v1/submissions/:id/review`, `/api/v1/reviews` | Instructor/admin feedback and submission review management |
-| Course Reviews | `/api/v1/courses/:courseId/reviews`, `/api/v1/course-reviews` | Student course reviews and rating management |
-| Blogs | `/api/v1/blogs` | Blog creation, listing, update, delete |
-| Support | `/api/v1/support` | Support tickets, replies, status updates |
-| Notifications | `/api/v1/notifications` | In-app notification listing, unread count, mark read, delete, admin-created notifications |
-| Promotion Requests | `/api/v1/promotion-requests` | Student instructor promotion requests and admin review |
-| Dashboard | `/api/v1/dashboard` | Student, instructor, and admin analytics |
-| AI | `/api/v1/ai` | Gemini-powered AI tools and AI logs |
+| Module             | Base Route                                                    | Responsibility                                                                                                |
+| ------------------ | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Health             | `/health`                                                     | Confirms API availability                                                                                     |
+| Auth               | `/api/v1/auth`                                                | Registration, login, refresh token, logout, profile, email verification, password reset, Google OAuth helpers |
+| Users              | `/api/v1/users`                                               | User listing, profile update, role change, blocking                                                           |
+| Categories         | `/api/v1/categories`                                          | Course category management                                                                                    |
+| Courses            | `/api/v1/courses`                                             | Course CRUD, public catalog, featured courses, related courses, course details                                |
+| Course Modules     | `/api/v1/course-modules`                                      | Course module creation, update, delete                                                                        |
+| Lessons            | `/api/v1/lessons`                                             | Lesson creation, update, delete, completion                                                                   |
+| Enrollments        | `/api/v1/enrollments`                                         | Course enrollment, my classes, progress update, enrollment details                                            |
+| Assignments        | `/api/v1/assignments`                                         | Assignment CRUD and filtered assignment listing                                                               |
+| Submissions        | `/api/v1/submissions`                                         | Student submissions, my submissions, pending reviews, status updates                                          |
+| Submission Reviews | `/api/v1/submissions/:id/review`, `/api/v1/reviews`           | Instructor/admin feedback and submission review management                                                    |
+| Course Reviews     | `/api/v1/courses/:courseId/reviews`, `/api/v1/course-reviews` | Student course reviews and rating management                                                                  |
+| Blogs              | `/api/v1/blogs`                                               | Blog creation, listing, update, delete                                                                        |
+| Support            | `/api/v1/support`                                             | Support tickets, replies, status updates                                                                      |
+| Notifications      | `/api/v1/notifications`                                       | In-app notification listing, unread count, mark read, delete, admin-created notifications                     |
+| Promotion Requests | `/api/v1/promotion-requests`                                  | Student instructor promotion requests and admin review                                                        |
+| Dashboard          | `/api/v1/dashboard`                                           | Student, instructor, and admin analytics                                                                      |
+| AI                 | `/api/v1/ai`                                                  | Gemini-powered AI tools and AI logs                                                                           |
 
 ### Access Model
 
@@ -483,19 +483,19 @@ SkillSync AI Backend/
 
 ## Available Scripts
 
-| Command | Description |
-| --- | --- |
-| `bun run dev` | Run the API with `tsx watch` |
-| `bun run build` | Compile the server with `tsup` |
-| `bun run vercel-build` | Generate Prisma client and build for Vercel |
-| `bun run start` | Run the compiled server from `dist/server.js` |
-| `bun run prisma:generate` | Generate Prisma Client |
-| `bun run prisma:migrate` | Run Prisma development migrations |
-| `bun run prisma:deploy` | Apply production migrations |
-| `bun run prisma:studio` | Open Prisma Studio |
-| `bun run prisma:seed` | Seed demo data |
-| `bun run lint` | Run TypeScript compile check |
-| `bun run format` | Format the repository with Prettier |
+| Command                   | Description                                   |
+| ------------------------- | --------------------------------------------- |
+| `bun run dev`             | Run the API with `tsx watch`                  |
+| `bun run build`           | Compile the server with `tsup`                |
+| `bun run vercel-build`    | Generate Prisma client and build for Vercel   |
+| `bun run start`           | Run the compiled server from `dist/server.js` |
+| `bun run prisma:generate` | Generate Prisma Client                        |
+| `bun run prisma:migrate`  | Run Prisma development migrations             |
+| `bun run prisma:deploy`   | Apply production migrations                   |
+| `bun run prisma:studio`   | Open Prisma Studio                            |
+| `bun run prisma:seed`     | Seed demo data                                |
+| `bun run lint`            | Run TypeScript compile check                  |
+| `bun run format`          | Format the repository with Prettier           |
 
 ## Notable Workflows
 
@@ -590,8 +590,8 @@ This project is structured to show the signals recruiters and reviewers look for
 
 If this is a team project, list contributors here.
 
-| Name | Role | Contributions |
-| --- | --- | --- |
+| Name     | Role | Contributions |
+| -------- | ---- | ------------- |
 | Member-1 | Role | Contributions |
 | Member-2 | Role | Contributions |
 
