@@ -12,3 +12,10 @@ pnpm-debug.log*
 .vercel
 docs/.post-route-demo-data.json
 config.bat
+
+# Environment variables & secrets (added by GitHub Guardian)
+*.env
+!.env.sample
+.envrc
+.venv/
+venv/
